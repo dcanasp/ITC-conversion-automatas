@@ -6,9 +6,9 @@ class alfabeto:
     def generarCadenaAleatoria(self,n):
         nuevaCadena = []
         for i in range(n):
-            nuevaCadena.append(self.simbolos[random.randint(0,n-1)])
+            nuevaCadena.append(self.simbolos[random.randint(0,len(self.simbolos)-1)])
         return nuevaCadena
     
 instancia = alfabeto(["a","b","c","d"])
 # instancia.simbolos
-print( instancia.generarCadenaAleatoria(5))
+print( instancia.generarCadenaAleatoria(7))
