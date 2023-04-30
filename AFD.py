@@ -49,6 +49,36 @@ class AFD:
     def procesarCadenaConDetalles(self,cadena):
         return
     
+    def procesarListaCadenas(self, listaCadenas,nombreArchivo, imprimirPantalla):
+        return
+    
+    def hallarComplemento(self,afdInput):
+        return
+    
+    def hallarProductoCartesianoY(self, afd1, afd2):
+        return 
+    
+    def hallarProductoCartesianoO(self, afd1, afd2):
+        return
+    
+    def hallarProductoCartesianoDiferencia(self, afd1, afd2):
+        return
+
+    def hallarProductoCartesianoDiferenciaSimetrica(self, afd1, afd2):
+        return    
+
+    def hallarProductoCartesiano(self, afd1, afd2, operacion):
+        #Llamarlos dependiendo la operación.
+        self.hallarProductoCartesianoY()
+        self.hallarProductoCartesianoO()
+        self.hallarProductoCartesianoDiferencia()
+        self.hallarProductoCartesianoDiferenciaSimetrica()
+        return 
+    
+    def simplificarAFD(afdInput):
+        return
+
+    
 instancia = AFD(['0','1'],['q0','q1','q2'],['q0'],['q2'],[])
 instancia.pasarString()
 instancia.procesarCadenaConDetalles('01010110')
