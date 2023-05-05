@@ -10,7 +10,6 @@ class AFD:
         setattr(self,'estadosInicial',estadoInicial)
         setattr(self,'estadosAceptados',estadosAceptados)
         setattr(self,'transicion',delta)
-        
         setattr(self,'estadosLimbo','')
         setattr(self,'estadosInaccesibles','')
         self.verificarCorregirCompletitudAFD()
@@ -34,7 +33,6 @@ class AFD:
         return
     
     def pasarString(self):
-        prueba(self.alfabeto,self.transicion)
         return
     
     def imprimirAFDSimplificado(self):
@@ -79,6 +77,6 @@ class AFD:
         return
 
     
-instancia = AFD(['0','1'],['q0','q1','q2'],['q0'],['q2'],[])
+instancia = AFD(['a','b'],['q0','q1','q2'],['q0'],['q2'],[['q0','q1'],['q1','q2'],['q1','q1']])
 instancia.pasarString()
 instancia.procesarCadenaConDetalles('01010110')
