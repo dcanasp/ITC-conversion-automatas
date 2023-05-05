@@ -30,7 +30,7 @@ class AFD:
     def hallarEstadosInaccesibles(self):
         # Inicializar la lista de estados accesibles con el estado inicial
         estados_accesibles = []
-        ##estados_accesibles.append(self.estadoInicial[0])
+        estados_accesibles.append(self.estadoInicial[0])
         pila = self.estadoInicial
         ##estados_accesibles[self.estados.index(self.estadoInicial[0])] = 1
         # Recorrer los estados y simular las transiciones a través del alfabeto
@@ -113,6 +113,6 @@ class AFD:
     
 
     
-instancia = AFD(['a','b'],['q0','q1','q2','q3'],['q0'],['q2'],{'q0':{'a':'q0','b':'q2'},'q1':{'a':'q0','b':'q0'}, 'q2':{'a':'q2','b':'q2'}, 'q3':{'a':'q2','b':'q2'}})
+instancia = AFD(['a','b'],['q0','q1','q2','q3'],['q0'],['q2'],{'q0':{'a':'q2','b':'q2'},'q1':{'a':'q0','b':'q0'}, 'q2':{'a':'q2','b':'q2'}, 'q3':{'a':'q2','b':'q2'}})
 instancia.hallarEstadosInaccesibles()
 instancia.procesarCadenaConDetalles('01010110')
