@@ -13,10 +13,9 @@ class AFD:
         setattr(self,'estadosInaccesibles',[])
         self.verificarCorregirCompletitudAFD()
 
-    def crearArchivo(self,nombreArchivo):
-        setattr(self,'nombreArchivo',nombreArchivo)
+    def constructor(self,nombreArchivo):
+        setattr(self,'nombreArchivo'+".afd",nombreArchivo)
         self.verificarCorregirCompletitudAFD()
-        self.exportar()
     
     def verificarCorregirCompletitudAFD(self):
         alfabeto = self.alfabeto
@@ -30,12 +29,13 @@ class AFD:
                 if transicion[estado][simbolo] not in estados :
                     completo = False
                     break
-            if not completo:
-                break
                 
         # Agregar estado limbo y ajustar transiciones si el AFD no es completo
         if not completo:
             estadoLimbo = 'q'+str(len(self.estados)+len(self.estadosLimbo))
+            if estadoLimbo in estados:
+                while estadoLimbo in estados:
+                    estadoLimbo = 'q'+str(len(self.estados)+len(self.estadosLimbo)+1)
             estados.append(estadoLimbo)
             transicion[estadoLimbo] = {}
             
@@ -58,15 +58,27 @@ class AFD:
             print("El AFD es completo, no se agregó ningún estado limbo")
     
     def hallarEstadosLimbo(self):
-        return
+        estados = list(set(self.estados)-set(self.estadosAceptados))
+        estadosLimbo = []
         
+        # Verificamos cada estado del AFD
+        for estado in estados:
+            cont = 0
+            for simbolo in self.alfabeto:
+                if self.transicion[estado][simbolo] == estado:
+                    cont += 1
+            if cont == len(self.alfabeto):
+                estadosLimbo.append(estado)
 
+        self.estadosLimbo = estadosLimbo
+
+        
     def hallarEstadosInaccesibles(self):
         # Inicializar la lista de estados accesibles con el estado inicial
         estados_accesibles = []
         estados_accesibles.append(self.estadoInicial[0])
-        pila = self.estadoInicial
-        ##estados_accesibles[self.estados.index(self.estadoInicial[0])] = 1
+        pila = []
+        pila.append(self.estadoInicial[0])
         # Recorrer los estados y simular las transiciones a través del alfabeto
         while pila != []:
             estado = pila.pop()
@@ -82,8 +94,7 @@ class AFD:
                 if estado_siguiente not in estados_accesibles:
                     estados_accesibles.append(estado_siguiente)
                     pila.append(estado_siguiente)
-
-                
+              
 
         # Cualquier estado que no esté en la lista de estados accesibles es inaccesible
         for estado in self.estados:
@@ -101,32 +112,37 @@ class AFD:
     
     def pasarString(self):
         # Imprimir estados, alfabeto y estado inicial
-        output = f"Estados: {self.estados}\nAlfabeto: {self.alfabeto}\nEstado inicial: {self.estadoInicial}\n"
+        output = "#!nfe\n#alphabet\n"
+
+        output += f"{self.alfabeto[0]}-{self.alfabeto[-1]}\n#states\n"
         
         # Imprimir estados de aceptación
-        output += f"Estados de aceptación: {self.estadosAceptados}\n"
-        
-        # Imprimir estados inaccesibles
-        output += f"Estados inaccesibles: {self.estadosInaccesibles}\n"
-        
-        # Imprimir estados limbo
-        output += f"Estados limbo: {self.estadosLimbo}\n"
-        
-        # Imprimir tabla de transiciones
-        output += "Tabla de transiciones:\n"
         for estado in self.estados:
-            output += f"{estado}:\n"
+            output += f"{estado}\n"
+
+        output += f"#initial\n{self.estadoInicial[0]}\n"
+
+        output += "#accepting\n"
+        for estado in self.estadosAceptados:
+            output += f"{estado}\n"
+
+        output += "#transitions\n"
+
+        # Imprimir tabla de transiciones
+        for estado in self.estados:
             for simbolo in self.alfabeto:
                 destino = self.transicion[estado].get(simbolo, None)
-                output += f"    {simbolo} -> {destino}\n"
+                output += f"{estado}:{simbolo}>{destino}\n"
         
         return output
     
     def imprimirAFDSimplificado(self):
         return
     
-    def exportar(self):
-        return
+    def exportar(self, nombreArchivo):
+        archivo = open(nombreArchivo+".afd","w")
+        archivo.write(self.pasarString())
+        return archivo.close()
     
     def procesarCadena(self,cadena):
         # Recorrer la cadena y actualizar el estado actual en cada transición
@@ -173,39 +189,185 @@ class AFD:
     def procesarListaCadenas(self, listaCadenas,nombreArchivo, imprimirPantalla):
         return
     
-    def hallarComplemento(self,afdInput):
+    def simplificarAFD(self, afdInput):
         return
     
-    def hallarProductoCartesianoY(self, afd1, afd2):
-        return 
-    
-    def hallarProductoCartesianoO(self, afd1, afd2):
-        return
-    
-    def hallarProductoCartesianoDiferencia(self, afd1, afd2):
+    def eliminarEstadosInaccesibles(self):
+        for estado in self.estadosInaccesibles:
+            self.estados.remove(estado)
+            for simbolo in self.alfabeto:
+                self.transicion[estado].pop(simbolo)
         return
 
-    def hallarProductoCartesianoDiferenciaSimetrica(self, afd1, afd2):
-        return    
-
-    def hallarProductoCartesiano(self, afd1, afd2, operacion):
-        #Llamarlos dependiendo la operación.
-        self.hallarProductoCartesianoY()
-        self.hallarProductoCartesianoO()
-        self.hallarProductoCartesianoDiferencia()
-        self.hallarProductoCartesianoDiferenciaSimetrica()
-        return 
     
-    def simplificarAFD(afdInput):
-        return
+def hallarComplemento(afdInput):
+    for estado in afdInput.estados:
+        if estado not in afdInput.estadosAceptados:
+            afdInput.estadosAceptados.append(estado)
+        else:
+            afdInput.estadosAceptados.remove(estado)
+    return afdInput
+    
+def hallarProductoCartesianoY(afd1, afd2):
+    alfabeto = afd1.alfabeto
+        
+    estados = []
+    for estado1 in afd1.estados:
+        for estado2 in afd2.estados:
+            estado = estado1 + estado2
+            estados.append(estado)
+        
+    estadoInicial = []
+    estadoIni = afd1.estadoInicial[0] + afd2.estadoInicial[0]
+    estadoInicial.append(estadoIni)
+        
+    estadosAceptados = []
+    for estado1 in afd1.estadosAceptados:
+        for estado2 in afd2.estadosAceptados:
+            estado = estado1 + estado2
+            estadosAceptados.append(estado)
+        
+    transicion = {}
+    for estado in estados:
+        transicion[estado] = {}
+        for simbolo in alfabeto:
+            estado1 = estado[:len(afd1.estados[0])]
+            estado2 = estado[len(afd1.estados[0]):]
+            estado1_siguiente = afd1.transicion[estado1][simbolo]
+            estado2_siguiente = afd2.transicion[estado2][simbolo]
+            estado_siguiente = estado1_siguiente + estado2_siguiente
+            transicion[estado][simbolo] = estado_siguiente
+        
+    afdResultado = AFD(alfabeto, estados, estadoInicial, estadosAceptados, transicion)
+    return afdResultado
+    
+def hallarProductoCartesianoO(afd1, afd2):
+    alfabeto = afd1.alfabeto
+      
+    estados = []
+    for estado1 in afd1.estados:
+        for estado2 in afd2.estados:
+            estado = estado1 + estado2
+            estados.append(estado)
+        
+    estadoInicial = []
+    estadoIni = afd1.estadoInicial[0] + afd2.estadoInicial[0]
+    estadoInicial.append(estadoIni)
+        
+    estadosAceptados = []
+    for estado1 in afd1.estados:
+        for estado2 in afd2.estados:
+            if (estado1 in afd1.estadosAceptados and estado2 not in afd2.estadosAceptados) or (estado1 not in afd1.estadosAceptados and estado2 in afd2.estadosAceptados) or (estado1 in afd1.estadosAceptados and estado2 in afd2.estadosAceptados):
+                estado = estado1 + estado2
+                estadosAceptados.append(estado)
+        
+    transicion = {}
+    for estado in estados:
+        transicion[estado] = {}
+        for simbolo in alfabeto:
+            estado1 = estado[:len(afd1.estados[0])]
+            estado2 = estado[len(afd1.estados[0]):]
+            estado1_siguiente = afd1.transicion[estado1][simbolo]
+            estado2_siguiente = afd2.transicion[estado2][simbolo]
+            estado_siguiente = estado1_siguiente + estado2_siguiente
+            transicion[estado][simbolo] = estado_siguiente
+        
+    afdResultado = AFD(alfabeto, estados, estadoInicial, estadosAceptados, transicion)
+    return afdResultado
+    
+def hallarProductoCartesianoDiferencia(afd1, afd2):
+    alfabeto = afd1.alfabeto
+      
+    estados = []
+    for estado1 in afd1.estados:
+        for estado2 in afd2.estados:
+            estado = estado1 + estado2
+            estados.append(estado)
+        
+    estadoInicial = []
+    estadoIni = afd1.estadoInicial[0] + afd2.estadoInicial[0]
+    estadoInicial.append(estadoIni)
+        
+    estadosAceptados = []
+    for estado1 in afd1.estados:
+        for estado2 in afd2.estados:
+            if estado1 in afd1.estadosAceptados and estado2 not in afd2.estadosAceptados:
+                estado = estado1 + estado2
+                estadosAceptados.append(estado)
+        
+    transicion = {}
+    for estado in estados:
+        transicion[estado] = {}
+        for simbolo in alfabeto:
+            estado1 = estado[:len(afd1.estados[0])]
+            estado2 = estado[len(afd1.estados[0]):]
+            estado1_siguiente = afd1.transicion[estado1][simbolo]
+            estado2_siguiente = afd2.transicion[estado2][simbolo]
+            estado_siguiente = estado1_siguiente + estado2_siguiente
+            transicion[estado][simbolo] = estado_siguiente
+        
+    afdResultado = AFD(alfabeto, estados, estadoInicial, estadosAceptados, transicion)
+    return afdResultado
+
+def hallarProductoCartesianoDiferenciaSimetrica(afd1, afd2):
+    alfabeto = afd1.alfabeto
+      
+    estados = []
+    for estado1 in afd1.estados:
+        for estado2 in afd2.estados:
+            estado = estado1 + estado2
+            estados.append(estado)
+        
+    estadoInicial = []
+    estadoIni = afd1.estadoInicial[0] + afd2.estadoInicial[0]
+    estadoInicial.append(estadoIni)
+        
+    estadosAceptados = []
+    for estado1 in afd1.estados:
+        for estado2 in afd2.estados:
+            if (estado1 in afd1.estadosAceptados and estado2 not in afd2.estadosAceptados) or (estado1 not in afd1.estadosAceptados and estado2 in afd2.estadosAceptados):
+                estado = estado1 + estado2
+                estadosAceptados.append(estado)
+
+    
+        
+    transicion = {}
+    for estado in estados:
+        transicion[estado] = {}
+        for simbolo in alfabeto:
+            estado1 = estado[:len(afd1.estados[0])]
+            estado2 = estado[len(afd1.estados[0]):]
+            estado1_siguiente = afd1.transicion[estado1][simbolo]
+            estado2_siguiente = afd2.transicion[estado2][simbolo]
+            estado_siguiente = estado1_siguiente + estado2_siguiente
+            transicion[estado][simbolo] = estado_siguiente
+        
+    afdResultado = AFD(alfabeto, estados, estadoInicial, estadosAceptados, transicion)
+    return afdResultado  
+
+def hallarProductoCartesiano(afd1, afd2, operacion):
+    #Llamarlos dependiendo la operación.
+    if operacion == 'insterseccion':
+        return hallarProductoCartesianoY(afd1, afd2)
+    elif operacion == 'union':
+        return hallarProductoCartesianoO(afd1, afd2)
+    elif operacion == 'diferencia':
+        return hallarProductoCartesianoDiferencia(afd1, afd2)
+    elif operacion == 'diferencia simetrica':
+        return hallarProductoCartesianoDiferenciaSimetrica(afd1, afd2)
+    else: 
+        print('Operación no válida')
+    
+    
     
     
 
     
 delta = {
-    'q0': {'a': 'q0', 'b': 'q1'},
-    'q1': {'a': 'q1', 'b': 'q1'}
-}
-afd = AFD(['a', 'b'], ['q0', 'q1'], ['q0'], ['q0'], delta)
-print(afd.pasarString())
+    'q0': {'a': 'q1', 'b': 'q2'},
+    'q1': {'a': '', 'b': 'q2'},
+    'q2': {'a': 'q2', 'b': ''},
 
+
+}
+afd1 = AFD(['a', 'b'], ['q0','q1','q2'], ['q0'], ['q0'], delta)
