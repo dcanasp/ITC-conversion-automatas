@@ -136,7 +136,6 @@ class AFD:
     
     def imprimirAFDSimplificado(self):
         self.pasarString()
-        return
     
     def exportar(self, nombreArchivo):
         archivo = open(nombreArchivo+".afd","w")
@@ -167,7 +166,6 @@ class AFD:
         estado_actual = self.estadoInicial[0]
         salida = ''
         i = 0
-
         # Recorrer la cadena y actualizar el estado actual en cada transición
         for simbolo in cadena:
             # Obtener el estado siguiente a partir del estado actual y el símbolo actual
@@ -181,14 +179,22 @@ class AFD:
             i += 1
 
         if estado_actual in self.estadosAceptados:
-            print(salida+'Aceptacion')
-            return salida+'Aceptacion'
+            return salida+'\tAceptacion'
         else:
-            print(salida+'No Aceptacion')
-            return salida+'No Aceptacion'
+            return salida+'\tNo Aceptacion'
     
-    def procesarListaCadenas(self, listaCadenas,nombreArchivo, imprimirPantalla):
-        return
+    def procesarListaCadenas(self, listaCadenas,nombreArchivo, imprimirPantalla: bool):
+        output = ''
+
+        for cadena in listaCadenas:
+            output += cadena+'\t'+self.procesarCadenaConDetalles(cadena)+'\n'
+
+        archivo = open(nombreArchivo+".afd","w")
+        archivo.write(output)
+        archivo.close()
+
+        if imprimirPantalla:
+            print(output)
  
     def eliminarEstadosInaccesibles(self):
         for estado in self.estadosInaccesibles:
@@ -481,10 +487,3 @@ def simplificarAFD(afd):
                    tuple(sorted(min_initial_state)),
                    {tuple(sorted(state)) for state in min_final_states},
                    min_transition_function)
-    
-    
-    
-
-
-
-    
