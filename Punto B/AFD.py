@@ -10,10 +10,6 @@ class AFD:
         setattr(self,'estadosLimbo',[])
         setattr(self,'estadosInaccesibles',[])
         self.verificarCorregirCompletitudAFD()
-
-    def constructor(self,nombreArchivo):
-        setattr(self,'nombreArchivo'+".afd",nombreArchivo)
-        self.verificarCorregirCompletitudAFD()
     
     def verificarCorregirCompletitudAFD(self):
         alfabeto = self.alfabeto
@@ -101,7 +97,7 @@ class AFD:
 
         # Si hay estados inaccesibles, imprimir un mensaje y devolver True
         if self.estadosInaccesibles:
-            print(self.estadosInaccesibles)
+            print("Estados inaccesibles: ", self.estadosInaccesibles)
             return True
 
         # Si no hay estados inaccesibles, devolver False
@@ -131,11 +127,13 @@ class AFD:
             for simbolo in self.alfabeto:
                 destino = self.transicion[estado].get(simbolo, None)
                 output += f"{estado}:{simbolo}>{destino}\n"
+
+        print(output)
         
         return output
     
     def imprimirAFDSimplificado(self):
-        return
+        self.pasarString()
     
     def exportar(self, nombreArchivo):
         archivo = open(nombreArchivo+".afd","w")
@@ -166,7 +164,6 @@ class AFD:
         estado_actual = self.estadoInicial[0]
         salida = ''
         i = 0
-
         # Recorrer la cadena y actualizar el estado actual en cada transición
         for simbolo in cadena:
             # Obtener el estado siguiente a partir del estado actual y el símbolo actual
@@ -180,24 +177,77 @@ class AFD:
             i += 1
 
         if estado_actual in self.estadosAceptados:
-            return print(salida+'Aceptacion')
+            return salida+'\tAceptacion'
         else:
-            return print(salida+'No Aceptacion')
+            return salida+'\tNo Aceptacion'
     
-    def procesarListaCadenas(self, listaCadenas,nombreArchivo, imprimirPantalla):
-        return
-    
-    def simplificarAFD(self, afdInput):
-        return
-    
+    def procesarListaCadenas(self, listaCadenas,nombreArchivo, imprimirPantalla: bool):
+        output = ''
+
+        for cadena in listaCadenas:
+            output += cadena+'\t'+self.procesarCadenaConDetalles(cadena)+'\n'
+
+        archivo = open(nombreArchivo+".afd","w")
+        archivo.write(output)
+        archivo.close()
+
+        if imprimirPantalla:
+            print(output)
+ 
     def eliminarEstadosInaccesibles(self):
         for estado in self.estadosInaccesibles:
             self.estados.remove(estado)
             for simbolo in self.alfabeto:
                 self.transicion[estado].pop(simbolo)
-        return
     def graficar(self):
         graficos(self.alfabeto,self.estados,self.transicion,self.estadoInicial,self.estadosAceptados,self.estadosLimbo)
+
+
+def constructor(nombreArchivo):
+        try:
+            with open(nombreArchivo+".afd","r") as archivo:
+                datos = archivo.readlines()
+                for i in range(len(datos)):
+                    datos[i] = datos[i].strip()
+                estados = []
+                estadoInicial = []
+                estadosAceptados = []
+                transiciones = {}
+                
+                for i in range(len(datos)):
+                    if datos[i] == '#alphabet':
+                        cadena = datos[i+1]
+                        inicio = ord(cadena[0])
+                        fin = ord(cadena[-1])
+                        alfabeto = [chr(i) for i in range(inicio, fin+1)]
+                    if datos[i] == '#states':
+                        for j in range(i+1,len(datos)):
+                            if datos[j] == '#initial':
+                                break
+                            else:
+                                estados.append(datos[j])
+                    if datos[i] == '#initial':
+                        estadoInicial.append(datos[i+1])
+                    if datos[i] == '#accepting':
+                        for j in range(i+1,len(datos)):
+                            if datos[j] == '#transitions':
+                                break
+                            else:
+                                estadosAceptados.append(datos[j])
+                    if datos[i] == '#transitions':
+                        for j in range(i+1,len(datos)):
+                                estado, transicion = datos[j].split(':')
+                                caracter, nuevo_estado = transicion.split('>')
+                                
+                                if estado not in transiciones:
+                                    transiciones[estado] = {}
+                                
+                                transiciones[estado][caracter] = nuevo_estado
+            afd = AFD(alfabeto, estados, estadoInicial, estadosAceptados, transiciones)
+            return afd
+
+        except(FileNotFoundError):
+            print("No se encontró el archivo")
     
 def hallarComplemento(afdInput):
     for estado in afdInput.estados:
@@ -327,9 +377,7 @@ def hallarProductoCartesianoDiferenciaSimetrica(afd1, afd2):
             if (estado1 in afd1.estadosAceptados and estado2 not in afd2.estadosAceptados) or (estado1 not in afd1.estadosAceptados and estado2 in afd2.estadosAceptados):
                 estado = estado1 + estado2
                 estadosAceptados.append(estado)
-
-    
-        
+       
     transicion = {}
     for estado in estados:
         transicion[estado] = {}
@@ -357,54 +405,85 @@ def hallarProductoCartesiano(afd1, afd2, operacion):
     else: 
         print('Operación no válida')
 
-    
-    
-    
+def simplificarAFD(afd):
+    # Eliminar estados inaccesibles
+        afd.hallarEstadosInaccesibles()
+        afd.eliminarEstadosInaccesibles()
 
-    
-delta = {
-    'q0': {'a': 'q1', 'b': 'q2'},
-    'q1': {'a': '', 'b': 'q2'},
-    'q2': {'a': 'q2', 'b': 'q3'},
-    'q3': {'a':'','b':''}
-}
+        # Inicializar la tabla de pares de estados no marcados
+        unmarked_pairs = set()
+        for state1 in afd.estados:
+            for state2 in afd.estados:
+                if state1 != state2 and frozenset([state1, state2]) not in unmarked_pairs:
+                    if (state1 in afd.estadosAceptados) != (state2 in afd.estadosAceptados):
+                        continue
+                    unmarked_pairs.add(frozenset([state1, state2]))
 
+        # Marcar pares de estados distinguibles
+        marked_pairs = set()
+        new_marked_pairs = set()
+        while True:
+            for pair in unmarked_pairs:
+                state1, state2 = pair
+                for symbol in afd.alfabeto:
+                    next_pair = frozenset([afd.transicion[state1][symbol], afd.transicion[state2][symbol]])
+                    if next_pair in marked_pairs:
+                        new_marked_pairs.add(pair)
+                        break
+            if not new_marked_pairs:
+                break
+            marked_pairs.update(new_marked_pairs)
+            unmarked_pairs -= new_marked_pairs
+            new_marked_pairs.clear()
 
-delta2 ={
-    'q0': {'a': 'q1', 'b': 'q2'},
-    'q1': {'a': 'q1', 'b': 'q2'},
-    'q2': {'a':'a','b':''}
-}
-afd2 = AFD(['a','b'],['q0','q1','q2'],['q0'],['q0','q1'],delta2)
+        # Construir el AFD mínimo
+        min_states = []
+        for pair in unmarked_pairs:
+            state1, state2 = pair
+            found = False
+            for min_state in min_states:
+                if state1 in min_state or state2 in min_state:
+                    min_state.update(pair)
+                    found = True
+                    break
+            if not found:
+                min_states.append(set(pair))
+        for state in afd.estados:
+            found = False
+            for min_state in min_states:
+                if state in min_state:
+                    found = True
+                    break
+            if not found:
+                min_states.append({state})
 
-delta3 = {
-    'q0':{'a': 'q3','a': 'q1', 'b': 'q1'},
-    'q1':{'a': 'q1', 'b': 'q3'},
-    'q2':{'a': 'q2', 'b': 'q0'},
-    'q3':{'a': 'q2', 'b': ''},
-}
+        min_alphabet = afd.alfabeto
+        min_transition_function = {}
+        for min_state in min_states:
+            representative = next(iter(min_state))
+            min_transition_function[tuple(sorted(min_state))] = {}
+            for symbol in afd.alfabeto:
+                next_state = afd.transicion[representative][symbol]
+                for s in min_states:
+                    if next_state in s:
+                        min_transition_function[tuple(sorted(min_state))][symbol] = tuple(sorted(s))
+                        break
 
-afd3 = AFD(['a','b'],['q0','q1','q2','q3'],['q0'],['q2','q3'],delta3)
+        min_initial_state = None
+        for min_state in min_states:
+            if afd.estadoInicial[0] in min_state:
+                min_initial_state = tuple(sorted(min_state))
+                break
 
-
-
-
-# (self,alfabeto,estados,estadoInicial,estadosAceptados,delta)
-afd1 = AFD(['a', 'b'], ['q0','q1','q2','q3'], ['q0'], ['q0'], delta)
-
-
-afd1.exportar('nombre')
-afd1.graficar()
-afd2.graficar()
-afd3.graficar()
-'''
-print(afd1.hallarEstadosLimbo())
-print(afd1.imprimirAFDSimplificado()) #
-print(afd1.hallarEstadosInaccesibles()) 
-print(afd1.eliminarEstadosInaccesibles())
-print(afd1.pasarString())
-print(afd1.procesarCadena('abbaab'))
-print(afd1.procesarCadenaConDetalles('abbaab'))
-print(afd1.procesarListaCadenas('abbaab','prueba','no')) #
-print(afd1.simplificarAFD('abbaab')) #
-'''
+        min_final_states = set()
+        for final_state in afd.estadosAceptados:
+            for min_state in min_states:
+                if final_state in min_state:
+                    min_final_states.add(tuple(sorted(min_state)))
+                    break
+        
+        return AFD(min_alphabet,
+                   {tuple(sorted(state)) for state in min_states},
+                   tuple(sorted(min_initial_state)),
+                   {tuple(sorted(state)) for state in min_final_states},
+                   min_transition_function)
