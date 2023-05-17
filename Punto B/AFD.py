@@ -1,7 +1,5 @@
-# from ayudasAFD import prueba,segunda #esto es lo mismo
+from ayudasAFD import graficos
 #NO CREAR MAS FUNCIONES EN ESTE ARCHIVO, SI SE NECESITAN IR A ayudasAFD, U OTROS ARCHIVOS COMO LOS VAYAN NECESITANDO
-
-
 class AFD:
     def __init__(self,alfabeto,estados,estadoInicial,estadosAceptados,delta):
         setattr(self,'alfabeto',alfabeto)
@@ -198,7 +196,8 @@ class AFD:
             for simbolo in self.alfabeto:
                 self.transicion[estado].pop(simbolo)
         return
-
+    def graficar(self):
+        graficos(self.alfabeto,self.estados,self.transicion,self.estadoInicial,self.estadosAceptados,self.estadosLimbo)
     
 def hallarComplemento(afdInput):
     for estado in afdInput.estados:
@@ -357,7 +356,7 @@ def hallarProductoCartesiano(afd1, afd2, operacion):
         return hallarProductoCartesianoDiferenciaSimetrica(afd1, afd2)
     else: 
         print('Operación no válida')
-    
+
     
     
     
@@ -366,8 +365,46 @@ def hallarProductoCartesiano(afd1, afd2, operacion):
 delta = {
     'q0': {'a': 'q1', 'b': 'q2'},
     'q1': {'a': '', 'b': 'q2'},
-    'q2': {'a': 'q2', 'b': ''},
-
-
+    'q2': {'a': 'q2', 'b': 'q3'},
+    'q3': {'a':'','b':''}
 }
-afd1 = AFD(['a', 'b'], ['q0','q1','q2'], ['q0'], ['q0'], delta)
+
+
+delta2 ={
+    'q0': {'a': 'q1', 'b': 'q2'},
+    'q1': {'a': 'q1', 'b': 'q2'},
+    'q2': {'a':'a','b':''}
+}
+afd2 = AFD(['a','b'],['q0','q1','q2'],['q0'],['q0','q1'],delta2)
+
+delta3 = {
+    'q0':{'a': 'q3','a': 'q1', 'b': 'q1'},
+    'q1':{'a': 'q1', 'b': 'q3'},
+    'q2':{'a': 'q2', 'b': 'q0'},
+    'q3':{'a': 'q2', 'b': ''},
+}
+
+afd3 = AFD(['a','b'],['q0','q1','q2','q3'],['q0'],['q2','q3'],delta3)
+
+
+
+
+# (self,alfabeto,estados,estadoInicial,estadosAceptados,delta)
+afd1 = AFD(['a', 'b'], ['q0','q1','q2','q3'], ['q0'], ['q0'], delta)
+
+
+afd1.exportar('nombre')
+afd1.graficar()
+afd2.graficar()
+afd3.graficar()
+'''
+print(afd1.hallarEstadosLimbo())
+print(afd1.imprimirAFDSimplificado()) #
+print(afd1.hallarEstadosInaccesibles()) 
+print(afd1.eliminarEstadosInaccesibles())
+print(afd1.pasarString())
+print(afd1.procesarCadena('abbaab'))
+print(afd1.procesarCadenaConDetalles('abbaab'))
+print(afd1.procesarListaCadenas('abbaab','prueba','no')) #
+print(afd1.simplificarAFD('abbaab')) #
+'''
