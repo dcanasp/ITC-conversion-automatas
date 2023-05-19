@@ -1,5 +1,5 @@
 import random
-class alfabeto:
+class alfabeto_class:
     def __init__(self,simbolos):
         setattr(self,'simbolos',simbolos)
     
@@ -9,6 +9,6 @@ class alfabeto:
             nuevaCadena.append(self.simbolos[random.randint(0,len(self.simbolos)-1)])
         return nuevaCadena
     
-instancia = alfabeto(["a","b","c","d"])
+# instancia = alfabeto_class(["a","b","c","d"])
 # instancia.simbolos
-print( instancia.generarCadenaAleatoria(7))
+# print( instancia.generarCadenaAleatoria(7))

@@ -1,6 +1,6 @@
-from ayudasAFD import graficos
-#NO CREAR MAS FUNCIONES EN ESTE ARCHIVO, SI SE NECESITAN IR A ayudasAFD, U OTROS ARCHIVOS COMO LOS VAYAN NECESITANDO
-class AFD:
+from graficar import graficos
+
+class AFD_class:
     def __init__(self,alfabeto,estados,estadoInicial,estadosAceptados,delta):
         setattr(self,'alfabeto',alfabeto)
         setattr(self,'estados',estados)
@@ -243,7 +243,7 @@ def constructor(nombreArchivo):
                                     transiciones[estado] = {}
                                 
                                 transiciones[estado][caracter] = nuevo_estado
-            afd = AFD(alfabeto, estados, estadoInicial, estadosAceptados, transiciones)
+            afd = AFD_class(alfabeto, estados, estadoInicial, estadosAceptados, transiciones)
             return afd
 
         except(FileNotFoundError):
@@ -287,7 +287,7 @@ def hallarProductoCartesianoY(afd1, afd2):
             estado_siguiente = estado1_siguiente + estado2_siguiente
             transicion[estado][simbolo] = estado_siguiente
         
-    afdResultado = AFD(alfabeto, estados, estadoInicial, estadosAceptados, transicion)
+    afdResultado = AFD_class(alfabeto, estados, estadoInicial, estadosAceptados, transicion)
     return afdResultado
     
 def hallarProductoCartesianoO(afd1, afd2):
@@ -321,7 +321,7 @@ def hallarProductoCartesianoO(afd1, afd2):
             estado_siguiente = estado1_siguiente + estado2_siguiente
             transicion[estado][simbolo] = estado_siguiente
         
-    afdResultado = AFD(alfabeto, estados, estadoInicial, estadosAceptados, transicion)
+    afdResultado = AFD_class(alfabeto, estados, estadoInicial, estadosAceptados, transicion)
     return afdResultado
     
 def hallarProductoCartesianoDiferencia(afd1, afd2):
@@ -355,7 +355,7 @@ def hallarProductoCartesianoDiferencia(afd1, afd2):
             estado_siguiente = estado1_siguiente + estado2_siguiente
             transicion[estado][simbolo] = estado_siguiente
         
-    afdResultado = AFD(alfabeto, estados, estadoInicial, estadosAceptados, transicion)
+    afdResultado = AFD_class(alfabeto, estados, estadoInicial, estadosAceptados, transicion)
     return afdResultado
 
 def hallarProductoCartesianoDiferenciaSimetrica(afd1, afd2):
@@ -389,7 +389,7 @@ def hallarProductoCartesianoDiferenciaSimetrica(afd1, afd2):
             estado_siguiente = estado1_siguiente + estado2_siguiente
             transicion[estado][simbolo] = estado_siguiente
         
-    afdResultado = AFD(alfabeto, estados, estadoInicial, estadosAceptados, transicion)
+    afdResultado = AFD_class(alfabeto, estados, estadoInicial, estadosAceptados, transicion)
     return afdResultado  
 
 def hallarProductoCartesiano(afd1, afd2, operacion):
@@ -482,8 +482,9 @@ def simplificarAFD(afd):
                     min_final_states.add(tuple(sorted(min_state)))
                     break
         
-        return AFD(min_alphabet,
+        return AFD_class(min_alphabet,
                    {tuple(sorted(state)) for state in min_states},
                    tuple(sorted(min_initial_state)),
                    {tuple(sorted(state)) for state in min_final_states},
                    min_transition_function)
+
