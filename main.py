@@ -1,12 +1,7 @@
-# from  'Punto_B' import AFD 
-# import sys
-# sys.path.insert(0, './Punto_B/AFD/') 
-# from __init__ import AFD_clase
-
-from Punto_A import alfabeto_class
-from Punto_B import AFD_class
-from Punto_C import AutomataNoDeterminista
-
+from Punto_A import alfabeto
+from Punto_B import AFD #estos son paquetes, son la union de modulos
+from Punto_C import AFN
+# from prueba.ayuda import final #asi se maneja como un modulo, y modulos dentro de ese mismo modulo, se cachea para mayor velocidad
 
 class prueba:
     def __init__(self): 
@@ -45,7 +40,7 @@ delta2 ={
     'q1': {'a': 'q1', 'b': 'q2'},
     'q2': {'a':'a','b':''}
 }
-afd2 = AFD_class(['a','b'],['q0','q1','q2'],['q0'],['q0','q1'],delta2)
+afd2 = AFD.AFD_class(['a','b'],['q0','q1','q2'],['q0'],['q0','q1'],delta2)
 
 delta3 = {
     'q0':{'a': 'q3','a': 'q1', 'b': 'q1'},
@@ -54,13 +49,13 @@ delta3 = {
     'q3':{'a': 'q2', 'b': ''},
 }
 
-afd3 = AFD_class(['a','b'],['q0','q1','q2','q3'],['q0'],['q2','q3'],delta3)
+afd3 = AFD.AFD_class(['a','b'],['q0','q1','q2','q3'],['q0'],['q2','q3'],delta3)
 
 
 
 
 # (self,alfabeto,estados,estadoInicial,estadosAceptados,delta)
-afd1 = AFD_class(['a', 'b'], ['q0','q1','q2','q3'], ['q0'], ['q0'], delta)
+afd1 = AFD.AFD_class(['a', 'b'], ['q0','q1','q2','q3'], ['q0'], ['q0'], delta)
 
 
 afd1.exportar('nombre')
