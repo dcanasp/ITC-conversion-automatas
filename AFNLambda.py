@@ -1,7 +1,6 @@
-#!nfe
-#1) Constructor(alfabeto, estados, estadoInicial, estadosAceptacion,Delta) de la clase para inicializar los atributos.
+from AFN import AutomataNoDeterminista
+
 class AFNLambda:
-    #Función para obtener el alfabeto de un input
     def obtenerAlfabeto(alfabeto):
         letras=[]
         i=0
@@ -22,7 +21,7 @@ class AFNLambda:
                 print("Error en el alfabeto, revisa la entrada")
                 letras=False
                 break
-            letras=list(dict.fromkeys(letras))
+        letras=list(dict.fromkeys(letras))
         return letras
 
     def hallarEstadosInaccesibles(self):
@@ -61,7 +60,7 @@ class AFNLambda:
                     if partes[i][f]=="\n":
                         partes[i]=partes[i].replace("\n",",")
                     f+=1
-                i+=1
+                i+=1 
             #Remover el inicio de cada partes[i] hasta la primera coma
             i=0
             while i < len(partes):
@@ -72,15 +71,11 @@ class AFNLambda:
                         break
                     f+=1
                 i+=1
-            #Remover el final de cada partes[i] desde la ultima coma
+            #Quitar la coma que esta presente al final de cada partes[i], si la hay
             i=0
-            while i < len(partes):
-                f = len(partes[i])-1
-                while f > 0:
-                    if partes[i][f]==",":
-                        partes[i]=partes[i][:f]
-                        break
-                    f-=1
+            for parte in partes:
+                if parte[len(parte)-1]==",":
+                    partes[i]=parte[:len(parte)-1]
                 i+=1
             #Obtener el alfabeto
             alfabeto=AFNLambda.obtenerAlfabeto(partes[0])
@@ -92,13 +87,27 @@ class AFNLambda:
             estadosAceptacion=partes[3].split(',')
             #Obtener la funcion de transicion
             Delta=partes[4].split(',')
-        
+
         self.alfabeto = alfabeto
         self.estados = estados
         self.estadoInicial = estadoInicial
         self.estadosAceptacion = estadosAceptacion
         self.Delta = Delta
         self.estadosInaccesibles = []
+
+        for transicion in self.Delta:
+            if transicion.find(";"):
+                inicio=self.leer_hasta_subcadena(":",transicion)
+                medio=self.leer_desde_subcadena(":",transicion)
+                medio=self.leer_hasta_subcadena(">",medio)
+                final=self.leer_desde_subcadena(">",transicion)
+                transiciones=final.split(";")
+                for valor in transiciones:
+                    transicionCompleta=inicio+":"+medio+">"+valor
+                    self.Delta.append(transicionCompleta)
+                self.Delta.remove(transicion)
+        self.Delta=list(set(self.Delta))
+        self.Delta.sort()
 
     def imprimirAFNLSimplificado(self):
         representation = ""
@@ -136,24 +145,28 @@ class AFNLambda:
         listaEstados = []
         for estado_actual in estados:
             if estado_actual in self.estados:
-                for transicion in self.Delta:
-                    estadoCadena=self.leer_hasta_subcadena(":",transicion)
-                    transiciones=self.leer_desde_subcadena(":",transicion)
-                    if estadoCadena == estado_actual and transiciones[0] == '$':
-                        listaEstados.append(transiciones[2:])
-        i = 0
-        while i < len(listaEstados):
-            if listaEstados[i].find(';'):
-                listaEstados.extend(listaEstados[i].split(';'))
-                listaEstados.pop(i)
-            i+=1
-        i = 0
-        while i < len(listaEstados):
-            if listaEstados[i] in listaEstados[:i]:
-                listaEstados.pop(i)
-            else:
-                i+=1
+                listaEstados.extend(self.calcularClausuraLambdaRecursiva(estado_actual))
         listaEstados = list(set(listaEstados))
+        return listaEstados
+
+    def calcularClausuraLambdaRecursiva(self, estado):
+        estadosVisitados = set()
+        colaEstados = [estado]
+        listaEstados = []
+        while colaEstados:
+            estado_actual = colaEstados.pop(0)
+            if estado_actual in estadosVisitados:
+                continue
+            estadosVisitados.add(estado_actual)
+            listaEstados.append(estado_actual)
+            for transicion in self.Delta:
+                estadoCadena = self.leer_hasta_subcadena(":", transicion)
+                transiciones = self.leer_desde_subcadena(":", transicion)
+                if estadoCadena == estado_actual and transiciones[0] == '$':
+                    estadosDestino = transiciones[2:].split(';')
+                    colaEstados.extend(estadosDestino)
+        listaEstados = list(set(listaEstados))
+        listaEstados.sort()
         return listaEstados
 
     def leer_desde_subcadena(self,subcadena, cadena):
@@ -390,13 +403,118 @@ class AFNLambda:
         # Cerrar el archivo
         archivo_resultados.close()
 
+    def obtenerTransiciones(self,estadoActual, simbolo):
+        estadoActual = estadoActual
+        simbolo = simbolo
+        transiciones = []
+        for transicion in self.Delta:
+            estadoInicial = self.leer_hasta_subcadena(":", transicion)
+            simbolos = self.leer_desde_subcadena(":", transicion)
+            simboloActual = simbolos[0]
+            estadoFinal = simbolos[2:]
+            if estadoActual==estadoInicial and simboloActual==simbolo:
+                transiciones.append(estadoFinal)
+        i=0
+        while i < len(transiciones):
+            if transiciones[i].find(";")!=-1:
+                transiciones.extend(transiciones[i].split(";"))
+                transiciones.pop(i)
+            i+=1
+        return transiciones
+
+    def calcularTransicion(self,estadoActual, simbolo):
+        estadoActual = estadoActual
+        simbolo = simbolo
+        transiciones = []
+        for transicion in self.Delta:
+            estadoInicial = self.leer_hasta_subcadena(":", transicion)
+            simbolos = self.leer_desde_subcadena(":", transicion)
+            simboloActual = simbolos[0]
+            estadoFinal = simbolos[2:]
+            if estadoActual==estadoInicial and simboloActual==simbolo:
+                transiciones.append(estadoFinal)
+        transiciones=list(set(transiciones))
+        transiciones.sort()
+        return transiciones
+        
+    def unirEstados(self, transiciones):
+        estadosUnidos = {}
+        for transicion in transiciones:
+            estadoOrigen = self.leer_hasta_subcadena(":", transicion)
+            simbolo = self.leer_desde_subcadena(":", transicion)
+            transicionesDestino = self.leer_desde_subcadena(">", transicion)
+            if estadoOrigen not in estadosUnidos:
+                estadosUnidos[estadoOrigen] = {simbolo: set(transicionesDestino.split(";"))}
+            else:
+                estadosUnidos[estadoOrigen][simbolo] |= set(transicionesDestino.split(";"))
+
+        transicionesUnidas = []
+        for estado, transiciones in estadosUnidos.items():
+            transicionesEstado = []
+            for simbolo, destinos in transiciones.items():
+                transicionesEstado.append(estado + ":" + simbolo + ">" + ";".join(destinos))
+            transicionesUnidas.append(";".join(transicionesEstado))
+
+        return transicionesUnidas
+    
+    def actualizarEstados(self,listaTransiciones):
+        estadosNuevos=[]
+        estados=self.estados
+        for transicion in listaTransiciones:
+            inicio=self.leer_hasta_subcadena(":",transicion)
+            medio=self.leer_desde_subcadena(":",transicion)
+            medio=self.leer_hasta_subcadena(">",medio)
+            final=self.leer_desde_subcadena(">",transicion)
+            transiciones=final.split(";")
+            for estado in estados:
+                if estado in final:
+                    estadosNuevos.append(estado)
+        if self.estadoInicial not in estadosNuevos:
+            estadosNuevos.append(self.estadoInicial)
+        estadosNuevos=list(set(estadosNuevos))
+        estadosNuevos.sort()
+        return estadosNuevos
+    
+    def actualizarAceptacion(self,estados):
+        estadosAceptacion=[]
+        for estado in estados:
+            clambda=self.calcularLambdaClausura(estado)
+            for estadoActual in clambda:
+                if estadoActual in self.estadosAceptacion:
+                    estadosAceptacion.append(estado)
+        estadosAceptacion=list(set(estadosAceptacion))
+        estadosAceptacion.sort()
+        return estadosAceptacion
+    
+    def AFN_LambdaToAFN(self):
+        nuevoAFN=AutomataNoDeterminista()
+        estadoInicial=self.estadoInicial
+        estados=self.estados
+        lambdaClausuraInicial=self.calcularLambdaClausura(estadoInicial)
+        transicionesFinales=[]
+        for estado in estados:
+            lambdaClausuraInicial=self.calcularLambdaClausura(estado)
+            if estado not in lambdaClausuraInicial:
+                lambdaClausuraInicial.append(estado)
+            lambdaClausuraInicial=list(set(lambdaClausuraInicial))
+            for simbolo in self.alfabeto:
+                for estado2 in lambdaClausuraInicial:
+                    estadosProvisional=[]
+                    estadosProvisional=self.calcularTransicion(estado2,simbolo)
+                    for estadoActual in estadosProvisional:
+                        if estadoActual!=None:
+                            for transicion in self.calcularLambdaClausura(estadoActual):
+                                transicionesFinales.append(estado+":"+simbolo+">"+transicion)
+        transicionesFinales=list(set(transicionesFinales))
+        transicionesFinales.sort()
+        estadosFinales=self.actualizarEstados(transicionesFinales)
+        nuevoAFN.estados=estadosFinales
+        nuevoAFN.estadoInicial=estadoInicial
+        nuevoAFN.estadosAceptacion=self.actualizarAceptacion(self.estados)
+        nuevoAFN.alfabeto=self.alfabeto
+        nuevoAFN.tablaTransiciones.fromkeys(transicionesFinales)
+
+        return nuevoAFN
+
 Automata = AFNLambda("PruebaITC.txt")
-#Automata.hallarEstadosInaccesibles()
-#print(Automata.calcularLambdaClausura("s3"))
-#print("Estados inaccesibles",Automata.estadosInaccesibles)
-#print(Automata)
-#print(Automata.imprimirAFNLSimplificado())
-#print(Automata.procesarCadenaConDetalles("bbc"))
-#Automata.exportar("PruebaITC")
-#print(Automata.computarTodosLosProcesamientos("bbc", "Cadenas"))
-Automata.procesarListaCadenas(["bbc", "ab"], "Cadenas", True)
+AFNConvertido = Automata.AFN_LambdaToAFN()
