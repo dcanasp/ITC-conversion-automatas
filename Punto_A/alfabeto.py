@@ -4,9 +4,9 @@ class alfabeto_class:
         setattr(self,'simbolos',simbolos)
     
     def generarCadenaAleatoria(self,n):
-        nuevaCadena = []
+        nuevaCadena = ''
         for i in range(n):
-            nuevaCadena.append(self.simbolos[random.randint(0,len(self.simbolos)-1)])
+            nuevaCadena += (self.simbolos[random.randint(0,len(self.simbolos)-1)])
         return nuevaCadena
     
 # instancia = alfabeto_class(["a","b","c","d"])

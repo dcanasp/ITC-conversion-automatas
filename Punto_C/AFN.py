@@ -1,20 +1,20 @@
 class AutomataNoDeterminista:
-    """def __init__(self, alfabeto, estados, estado_inicial, estados_aceptacion, delta):
+    def __init__(self, alfabeto, estados, estado_inicial, estados_aceptacion, delta):
         self.alfabeto = alfabeto
         self.estados = estados
         self.estado_inicial = estado_inicial
         self.estados_aceptacion = estados_aceptacion
         self.estados_inaccesibles = set()  # Atributo para almacenar los estados inaccesibles
-        self.delta = delta"""
+        self.delta = delta
     
-    def __init__(self):
-        # inicializar atributos
-        self.alfabeto = set()
-        self.estados = set()
-        self.estadoInicial = None
-        self.estadosAceptacion = set()
-        self.estadosInaccesibles = set()
-        self.tablaTransiciones = {}
+    # def __init__(self):
+    #     # inicializar atributos
+    #     self.alfabeto = set()
+    #     self.estados = set()
+    #     self.estadoInicial = None
+    #     self.estadosAceptacion = set()
+    #     self.estadosInaccesibles = set()
+    #     self.tablaTransiciones = {}
 
     def hallarEstadosInaccesibles(self):
         # Realizamos un recorrido BFS (Breadth-First Search) para encontrar los estados inaccesibles
@@ -95,14 +95,14 @@ class AutomataNoDeterminista:
         
     
     def procesarCadena(self, cadena):
-            estados_actuales = {self.estadoInicial}
+            estados_actuales = {self.estado_inicial}
 
             for simbolo in cadena:
                 estados_siguientes = set()
-
+                
                 for estado_actual in estados_actuales:
-                    if (estado_actual, simbolo) in self.tablaTransiciones:
-                        estados_siguientes.update(self.tablaTransiciones[(estado_actual, simbolo)])
+                    if (estado_actual, simbolo) in self.delta:
+                        estados_siguientes.update(self.delta[(estado_actual, simbolo)])
 
                 estados_actuales = estados_siguientes
 
