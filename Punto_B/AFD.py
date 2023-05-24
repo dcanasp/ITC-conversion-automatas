@@ -136,7 +136,7 @@ class AFD_class:
         self.pasarString()
     
     def exportar(self, nombreArchivo):
-        archivo = open(nombreArchivo+".afd","w")
+        archivo = open(nombreArchivo+".dfa","w")
         archivo.write(self.pasarString())
         return archivo.close()
     
@@ -206,7 +206,7 @@ class AFD_class:
 
 def constructor(nombreArchivo):
         try:
-            with open(nombreArchivo+".afd","r") as archivo:
+            with open(nombreArchivo+".dfa","r") as archivo:
                 datos = archivo.readlines()
                 for i in range(len(datos)):
                     datos[i] = datos[i].strip()
