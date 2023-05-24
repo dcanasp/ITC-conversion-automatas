@@ -106,7 +106,7 @@ class AFD_class:
     
     def pasarString(self):
         # Imprimir estados, alfabeto y estado inicial
-        output = "#!nfe\n#alphabet\n"
+        output = "#!dfa\n#alphabet\n"
 
         output += f"{self.alfabeto[0]}-{self.alfabeto[-1]}\n#states\n"
         
@@ -199,6 +199,7 @@ class AFD_class:
             self.estados.remove(estado)
             for simbolo in self.alfabeto:
                 self.transicion[estado].pop(simbolo)
+
     def graficar(self):
         graficos(self.alfabeto,self.estados,self.transicion,self.estadoInicial,self.estadosAceptados,self.estadosLimbo)
 
@@ -487,4 +488,3 @@ def simplificarAFD(afd):
                    tuple(sorted(min_initial_state)),
                    {tuple(sorted(state)) for state in min_final_states},
                    min_transition_function)
-
