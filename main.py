@@ -3,10 +3,12 @@ from Punto_B import AFD #estos son paquetes, son la union de modulos
 from Punto_C import AFN
 from Punto_F.pruebas import prueba
 from Punto_G.aleatorios import claseValidacion
+from AFNLambda import AFNLambda
 # from prueba.ayuda import final #asi se maneja como un modulo, y modulos dentro de ese mismo modulo, se cachea para mayor velocidad
 
 listaAFN = prueba()
 # claseValidacion()
+AFNLambda()
 '''
 print(afd1.hallarEstadosLimbo())
 print(afd1.imprimirAFDSimplificado()) #
