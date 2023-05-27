@@ -1,5 +1,6 @@
-from AFN import AutomataNoDeterminista
+from Punto_C.AFN import AutomataNoDeterminista
 
+print(AutomataNoDeterminista)
 class AFNLambda:
     def obtenerAlfabeto(alfabeto):
         letras=[]
