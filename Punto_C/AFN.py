@@ -1,4 +1,5 @@
-
+from Punto_B.AFD import AFD_class
+from collections import defaultdict
 class AFN():
     #1
     def __init__(self, alfabeto, estados, estadoInicial, estadosAceptacion, delta):
@@ -192,8 +193,8 @@ class AFN():
         print(f"\nNúmero de procesamientos realizados: {num_procesamientos}")
         return num_procesamientos
     
-    #14
-    def procesarListaCadenasConversion(self, listaCadenas, nombreArchivo, imprimirPantalla):
+    #11
+    def procesarListaCadenas(self, listaCadenas, nombreArchivo, imprimirPantalla):
         if not nombreArchivo:
             nombreArchivo = "resultados.txt"
 
@@ -264,6 +265,96 @@ class AFN():
                     print(f"Número de procesamientos de aceptación: {num_aceptados}")
                     print(f"Número de procesamientos de rechazo: {num_rechazados}")
                     print(f"Número de procesamientos abortados: {num_abortados}\n")
+    
+    #7
+    def AFNtoAFD(self):  
+        print("Tabla de Transiciones del AFN:")
+        print(f"{'Estado Antiguo':^20} | {'Símbolo':^10} | {'Estado Nuevo':^20}")
+        print('-' * 55)
+        for transicion, estados_nuevos in self.transicion.items():
+            estado_antiguo, simbolo = transicion
+            estados_nuevos_str = ', '.join(estados_nuevos) if estados_nuevos else '$'
+            print(f"{estado_antiguo:^20} | {simbolo:^10} | {estados_nuevos_str:^20}")
+        print()
+        
+        
+        # Crear un nuevo objeto AFD
+        afd = AFD_class(self.alfabeto, [], self.estadoInicial, [], {})
+
+        # Obtener el cierre-ε del estado inicial del AFN
+        estado_inicial_afn = self.estadoInicial
+        cierre_inicial = [estado_inicial_afn]
+
+        # Agregar el cierre-ε del estado inicial como estado inicial del AFD
+        estado_inicial_afd = self.obtenerEstadoID(cierre_inicial)
+        afd.agregarEstado(estado_inicial_afd)
+
+        # Crear una tabla de transiciones para el AFD
+        tabla_transiciones = defaultdict(dict)
+        cierre_estados = {estado_inicial_afd: cierre_inicial}
+
+        # Procesar nuevos estados hasta que no haya más transiciones
+        procesados = set([estado_inicial_afd])
+
+        while procesados:
+            estado_actual_afd = procesados.pop()
+
+            for simbolo in self.alfabeto:
+                nuevos_estados = self.obtenerTransiciones(cierre_estados[estado_actual_afd], simbolo)
+
+                if nuevos_estados:
+                    estado_destino_afd = self.obtenerEstadoID(nuevos_estados)
+
+                    tabla_transiciones[estado_actual_afd][simbolo] = estado_destino_afd
+
+                    if estado_destino_afd not in afd.estados:
+                        afd.agregarEstado(estado_destino_afd)
+                        procesados.add(estado_destino_afd)
+                        cierre_estados[estado_destino_afd] = nuevos_estados
+
+        # Construir las transiciones completas del AFD
+        for estado_afd in afd.estados:
+            for simbolo in self.alfabeto:
+                estado_destino_afd = tabla_transiciones[estado_afd].get(simbolo, None)
+
+                if estado_destino_afd:
+                    afd.agregarTransicion(estado_afd, simbolo, estado_destino_afd)
+
+        # Obtener los estados de aceptación del AFD
+        estados_aceptacion_afd = []
+
+        for estado_afd in afd.estados:
+            for estado_aceptacion_afn in self.estadosAceptados:
+                if estado_aceptacion_afn in cierre_estados[estado_afd]:
+                    estados_aceptacion_afd.append(estado_afd)
+                    break
+
+        afd.estadosAceptados = estados_aceptacion_afd
+        afd.estadoInicial = estado_inicial_afd
+
+        # Imprimir la tabla de transiciones del AFD
+        print("Tabla de Transiciones del AFD:")
+        print(f"{'Estado Antiguo':^20} | {'Símbolo':^10} | {'Estado Nuevo':^20}")
+        print('-' * 55)
+        for estado_antiguo, transiciones in tabla_transiciones.items():
+            for simbolo, estado_nuevo in transiciones.items():
+                print(f"{estado_antiguo:^20} | {simbolo:^10} | {estado_nuevo:^20}")
+        print()
+
+        return afd
+    #7
+    def obtenerTransiciones(self, estados, simbolo):
+        nuevos_estados = set()
+
+        for estado_afn in estados:
+            if (estado_afn, simbolo) in self.transicion:
+                nuevos_estados.update(self.transicion[(estado_afn, simbolo)])
+
+        return list(nuevos_estados)
+    #7
+    def obtenerEstadoID(self, estados):
+        estados.sort()
+        return ''.join(estados)
 
     #2
 def constructor(nombreArchivo):
@@ -311,118 +402,3 @@ def constructor(nombreArchivo):
         except(FileNotFoundError):
             print("No se encontró el archivo")
     
-# INSTANCIA
-afn_instancia = AFN(['a', 'b', 'c'], ['q0', 'q1', 'q2', 'q3'], 'q0', ['q1'], {
-    ('q0', 'a'): ['q1','q1','q3'],
-    ('q0', 'b'): [],
-    ('q1', 'a'): ['q1'],
-    ('q1', 'b'): ['q2'],
-    ('q2', 'a'): [],
-    ('q2', 'b'): ['q1','q2'],
-    ('q3', 'a'): [],
-    ('q3', 'b'): ['q3'],
-})
-# afd = afn_instancia.toAFD()
-# afd.toString()
-# # print("instanciaalfabeto")
-# # print(afn_instancia.estados)
-# print(afn_instancia.toString())
-# print(afn_instancia.imprimirAFNSimplificado())
-# afn_instancia.exportar("instancia")
-# segundainstancia =constructor("instancia")
-# print("######################################### SEGUNDA")
-# print(segundainstancia.imprimirAFNSimplificado())
-# print(afn_instancia.procesarCadenaConDetalles("aaaa"))
-# # afn_instancia.toString()
-# # print("#############################################################################################################")
-# # afn_instancia.imprimirAFNSimplificado()
-# # afn_instancia.exportar("AFN_prueba")
-
-
-# AFN_prueba =constructor("AFN_prueba")
-
-# print(AFN_prueba.toString())
-afn_instancia = AFN(['a', 'b'], ['q0', 'q1', 'q2', 'q3'], 'q0', ['q1'], {
-    ('q0', 'a'): ['q0','q1','q3'],
-    ('q0', 'b'): [],
-    ('q1', 'a'): ['q1'],
-    ('q1', 'b'): ['q2'],
-    ('q2', 'a'): [],
-    ('q2', 'b'): ['q1','q2'],
-    ('q3', 'a'): [],
-    ('q3', 'b'): ['q3'],
-})
-# afn_instancia.toString()
-# afn_instancia.imprimirAFNSimplificado()
-# afn_instancia.exportar("prueba")
-# afn_instancia.procesarCadena("aaaa")
-# afn_instancia.procesarCadenaConDetalles("aaa")
-# nuevainstancia = constructor("prueba")
-# nuevainstancia.computarTodosLosProcesamientos("aaa","prueba")
-
-# listaCadenas = ["ab", "abc", "abcd"]
-# # afn_instancia.procesarListaCadenas(listaCadenas, "resultados.txt", imprimirPantalla=True)
-# print(afn_instancia.procesarListaCadenasConversion("aaaa"))
-
-listaCadenas = ["abababa", "aaaab", "aabbcc","a"]
-
-# Especificar el nombre del archivo de resultados
-nombreArchivo = "resultados.txt"
-
-# Indicar si se imprimirán los resultados en pantalla
-imprimirPantalla = False
-
-# Procesar la lista de cadenas con detalles y guardar los resultados en el archivo
-afn_instancia.procesarListaCadenasConversion(listaCadenas, nombreArchivo, imprimirPantalla)
-
-
-###ACÁ PRUEBO PQ NO PUEDO IMPORTAR
-
-class ProcesamientoCadenaAFN:
-    def __init__(self, cadena):
-        self.cadena = cadena
-        self.esAceptada = False
-        self.listaProcesamientosAbortados = []
-        self.listaProcesamientosAceptacion = []
-        self.listaProcesamientosRechazados = []
-
-    def procesar(self, automata):
-        self.procesarRecursivo(self.cadena, automata.estadoInicial, "", automata)
-
-    def procesarRecursivo(self, cadena, estado_actual, procesamiento, automata):
-        procesamiento += f"-> {estado_actual}"
-        if not cadena:
-            if estado_actual in automata.estadosAceptados:
-                self.esAceptada = True
-                self.listaProcesamientosAceptacion.append(procesamiento)
-            else:
-                self.listaProcesamientosRechazados.append(procesamiento)
-            return
-
-        simbolo = cadena[0]
-        simbolo_str = str(simbolo)
-        restante = cadena[1:]
-
-        if (estado_actual, simbolo_str) in automata.transicion:
-            for estado_siguiente in automata.transicion[(estado_actual, simbolo_str)]:
-                self.procesarRecursivo(restante, estado_siguiente, procesamiento + f"({simbolo_str})", automata)
-        else:
-            self.listaProcesamientosAbortados.append(procesamiento + f"({simbolo_str})")
-
-    def imprimirResultados(self):
-        print(f"Cadena: {self.cadena}")
-        print(f"Es aceptada: {self.esAceptada}")
-        print("Procesamientos de aceptación:")
-        for procesamiento in self.listaProcesamientosAceptacion:
-            print(procesamiento)
-        print("Procesamientos rechazados:")
-        for procesamiento in self.listaProcesamientosRechazados:
-            print(procesamiento)
-        print("Procesamientos abortados:")
-        for procesamiento in self.listaProcesamientosAbortados:
-            print(procesamiento)
-
-cadena = "aaaa"  
-procesamiento = ProcesamientoCadenaAFN(cadena)
-procesamiento.procesar(afn_instancia) 
-procesamiento.imprimirResultados()
