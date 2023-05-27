@@ -1,7 +1,5 @@
 # from Punto_C.AFN_Experimental import AFN
 from Punto_B.AFD import AFD_class
-print("prueba")
-print(AFD_class)
 
 class ProcesamientoCadenaAFN:
     def __init__(self, cadena):
