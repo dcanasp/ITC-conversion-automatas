@@ -1,6 +1,7 @@
 from Punto_A import alfabeto
 from Punto_B import AFD #estos son paquetes, son la union de modulos
 from Punto_C import AFN
+from Punto_E.procesamiento_automatas import ProcesamientoCadenaAFN
 from Punto_F.pruebas import prueba
 from Punto_G.aleatorios import claseValidacion
 from AFNLambda import AFNLambda
@@ -8,7 +9,24 @@ from AFNLambda import AFNLambda
 
 listaAFN = prueba()
 # claseValidacion()
-AFNLambda()
+# AFNLambda()
+ProcesamientoCadenaAFN()
+afn_instancia = AFN(['a', 'b'], ['q0', 'q1', 'q2', 'q3'], 'q0', ['q1'], {
+    ('q0', 'a'): ['q0','q1','q3'],
+    ('q0', 'b'): [],
+    ('q1', 'a'): ['q1'],
+    ('q1', 'b'): ['q2'],
+    ('q2', 'a'): [],
+    ('q2', 'b'): ['q1','q2'],
+    ('q3', 'a'): [],
+    ('q3', 'b'): ['q3'],
+})
+cadena = "aaaa"  
+procesamiento = ProcesamientoCadenaAFN(cadena)
+procesamiento.procesar(afn_instancia) 
+procesamiento.imprimirResultados()
+
+
 '''
 print(afd1.hallarEstadosLimbo())
 print(afd1.imprimirAFDSimplificado()) #

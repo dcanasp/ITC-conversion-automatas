@@ -1,4 +1,4 @@
-from Punto_C.AFN_Experimental import AFD_Experimental
+# from Punto_C.AFN_Experimental import AFN
 class ProcesamientoCadenaAFN:
     def __init__(self, cadena):
         self.cadena = cadena
@@ -43,20 +43,6 @@ class ProcesamientoCadenaAFN:
         for procesamiento in self.listaProcesamientosAbortados:
             print(procesamiento)
 
-afn_instancia = AFN(['a', 'b'], ['q0', 'q1', 'q2', 'q3'], 'q0', ['q1'], {
-    ('q0', 'a'): ['q0','q1','q3'],
-    ('q0', 'b'): [],
-    ('q1', 'a'): ['q1'],
-    ('q1', 'b'): ['q2'],
-    ('q2', 'a'): [],
-    ('q2', 'b'): ['q1','q2'],
-    ('q3', 'a'): [],
-    ('q3', 'b'): ['q3'],
-})
-cadena = "aaaa"  
-procesamiento = ProcesamientoCadenaAFN(cadena)
-procesamiento.procesar(afn_instancia) 
-procesamiento.imprimirResultados()
 
 
 
