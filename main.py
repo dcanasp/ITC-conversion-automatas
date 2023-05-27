@@ -1,30 +1,32 @@
 from Punto_A.alfabeto import alfabeto_class
 from Punto_B.AFD import AFD_class #estos son paquetes, son la union de modulos
 from Punto_C.AFN import AFN
+from Punto_D.AFNLambda import AFNLambda
 from Punto_E.procesamiento_automatas import ProcesamientoCadenaAFN
 from Punto_F.pruebas import prueba
 from Punto_G.aleatorios import claseValidacion
-# from AFNLambda import AFNLambda
+AFNLambda()
 # from prueba.ayuda import final #asi se maneja como un modulo, y modulos dentro de ese mismo modulo, se cachea para mayor velocidad
 
 # listaAFN = prueba()
 # claseValidacion()
 # AFNLambda()
 # ProcesamientoCadenaAFN()
-afn_instancia = AFN(['a', 'b'], ['q0', 'q1', 'q2', 'q3'], 'q0', ['q1'], {
-    ('q0', 'a'): ['q0','q1','q3'],
-    ('q0', 'b'): [],
-    ('q1', 'a'): ['q1'],
-    ('q1', 'b'): ['q2'],
-    ('q2', 'a'): [],
-    ('q2', 'b'): ['q1','q2'],
-    ('q3', 'a'): [],
-    ('q3', 'b'): ['q3'],
-})
-cadena = "aaaa"  
-procesamiento = ProcesamientoCadenaAFN(cadena)
-procesamiento.procesar(afn_instancia) 
-procesamiento.imprimirResultados()
+# afn_instancia = AFN(['a', 'b'], ['q0', 'q1', 'q2', 'q3'], 'q0', ['q1'], {
+#     ('q0', 'a'): ['q0','q1','q3'],
+#     ('q0', 'b'): [],
+#     ('q1', 'a'): ['q1'],
+#     ('q1', 'b'): ['q2'],
+#     ('q2', 'a'): [],
+#     ('q2', 'b'): ['q1','q2'],
+#     ('q3', 'a'): [],
+#     ('q3', 'b'): ['q3'],
+# })
+# cadena = "aaaa"  
+# procesamiento = ProcesamientoCadenaAFN(cadena)
+# procesamiento.procesar(afn_instancia) 
+# procesamiento.imprimirResultados()
+
 
 
 '''

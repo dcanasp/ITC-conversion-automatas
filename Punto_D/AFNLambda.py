@@ -1,6 +1,5 @@
 from Punto_C.AFN import AFN
 
-print(AFN)
 class AFNLambda:
     def obtenerAlfabeto(alfabeto):
         letras=[]
