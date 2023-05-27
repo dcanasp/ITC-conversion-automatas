@@ -1,4 +1,5 @@
 from Punto_B.AFD import AFD_class
+
 class AFN():
     #1
     def __init__(self, alfabeto, estados, estadoInicial, estadosAceptacion, delta):
