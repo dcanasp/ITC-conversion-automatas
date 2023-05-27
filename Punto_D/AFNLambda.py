@@ -1,6 +1,6 @@
+print('uno')
 from Punto_C.AFN import AFN
-
-print(AFN)
+print('dos')
 class AFNLambda:
     def obtenerAlfabeto(alfabeto):
         letras=[]
@@ -516,6 +516,6 @@ class AFNLambda:
         nuevoAFN.tablaTransiciones.fromkeys(transicionesFinales)
 
         return nuevoAFN
-
+print("aca")
 Automata = AFNLambda("PruebaITC.txt")
 AFNConvertido = Automata.AFN_LambdaToAFN()
