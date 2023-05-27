@@ -1,6 +1,4 @@
-print('uno')
 from Punto_C.AFN import AFN
-print('dos')
 class AFNLambda:
     def obtenerAlfabeto(alfabeto):
         letras=[]
@@ -26,8 +24,8 @@ class AFNLambda:
         return letras
 
     def hallarEstadosInaccesibles(self):
-        estados=Automata.estados
-        delta=Automata.Delta
+        estados=self.estados
+        delta=self.Delta
         for estado in estados:
             i=0
             encontrado=False
@@ -38,12 +36,12 @@ class AFNLambda:
                     break
                 i+=1
             if encontrado==False:
-                Automata.estadosInaccesibles.append(estado)
-        return Automata.estadosInaccesibles
+                self.estadosInaccesibles.append(estado)
+        return self.estadosInaccesibles
     
     def __init__(self, alfabeto=None, estados=None, estadoInicial=None, estadosAceptacion=None, Delta=None):
         if ".txt" in alfabeto:
-            with open(alfabeto, 'r') as file:
+            with open('./Punto_D/PruebaITC.txt', 'r') as file:
                 contenido = file.read()
                 partes = contenido.split('#')
             i=0
@@ -191,11 +189,11 @@ class AFNLambda:
         with open(nombre_archivo_con_extension, 'w') as archivo:
             archivo.write(contenido)
 
-    def comprobarCadena(cadena):
+    def comprobarCadena(self,cadena):
         cadena = cadena
         i=0
         while i < len(cadena):
-            if cadena[i] not in Automata.alfabeto:
+            if cadena[i] not in self.alfabeto:
                 print("La cadena no es valida")
                 return False
             i+=1
@@ -240,9 +238,9 @@ class AFNLambda:
     def exportar(self,nombre_archivo):
         nombre_archivo_con_extension = nombre_archivo + ".nfe"
         with open(nombre_archivo_con_extension, 'w') as archivo:
-            archivo.write(Automata.imprimirAFNLSimplificado())
+            archivo.write(self.imprimirAFNLSimplificado())
             archivo.write("#unreachable\n")
-            for estado in Automata.estadosInaccesibles:
+            for estado in self.estadosInaccesibles:
                 archivo.write(estado + "\n")
     
     def procesarCadena(self,cadena):
@@ -516,6 +514,3 @@ class AFNLambda:
         nuevoAFN.tablaTransiciones.fromkeys(transicionesFinales)
 
         return nuevoAFN
-print("aca")
-Automata = AFNLambda("PruebaITC.txt")
-AFNConvertido = Automata.AFN_LambdaToAFN()

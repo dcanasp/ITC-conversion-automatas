@@ -422,7 +422,7 @@ class ProcesamientoCadenaAFN:
         for procesamiento in self.listaProcesamientosAbortados:
             print(procesamiento)
 
-cadena = "aaaa"  
-procesamiento = ProcesamientoCadenaAFN(cadena)
-procesamiento.procesar(afn_instancia) 
-procesamiento.imprimirResultados()
+# cadena = "aaaa"  
+# procesamiento = ProcesamientoCadenaAFN(cadena)
+# procesamiento.procesar(afn_instancia) 
+# procesamiento.imprimirResultados()
