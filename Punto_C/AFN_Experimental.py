@@ -1,5 +1,4 @@
-# from Punto_B.AFD import AFD_class
-
+from Punto_B.AFD import AFD_class
 class AFN():
     #1
     def __init__(self, alfabeto, estados, estadoInicial, estadosAceptacion, delta):
@@ -192,6 +191,80 @@ class AFN():
         num_procesamientos = len(procesamientosAceptados) + len(procesamientosRechazados) + len(procesamientosAbortados)
         print(f"\nNúmero de procesamientos realizados: {num_procesamientos}")
         return num_procesamientos
+    
+    #14
+    def procesarListaCadenasConversion(self, listaCadenas, nombreArchivo, imprimirPantalla):
+        if not nombreArchivo:
+            nombreArchivo = "resultados.txt"
+
+        with open(nombreArchivo, "w") as file:
+            for cadena in listaCadenas:
+                procesamientosAceptados = []
+                procesamientosRechazados = []
+                procesamientosAbortados = []
+
+                def procesar(cadena, estado_actual, procesamiento):
+                    procesamiento += f"-> {estado_actual}"
+                    if not cadena:
+                        if estado_actual in self.estadosAceptados:
+                            procesamientosAceptados.append(procesamiento + "-> Aceptación")
+                        else:
+                            procesamientosRechazados.append(procesamiento + "-> Rechazo")
+                        return
+
+                    simbolo = cadena[0]
+                    restante = cadena[1:]
+
+                    if (estado_actual, simbolo) in self.transicion:
+                        for estado_siguiente in self.transicion[(estado_actual, simbolo)]:
+                            procesar(restante, estado_siguiente, procesamiento + f"({simbolo})")
+
+                    procesamientosAbortados.append(procesamiento + "-> Abortado")
+
+                procesar(cadena, self.estadoInicial, "")
+
+                num_posibles_procesamientos = len(procesamientosAceptados) + len(procesamientosRechazados) + len(procesamientosAbortados)
+                num_aceptados = len(procesamientosAceptados)
+                num_rechazados = len(procesamientosRechazados)
+                num_abortados = len(procesamientosAbortados)
+
+                file.write(f"Cadena: {cadena}\n")
+                file.write("Procesamientos Aceptados:\n")
+                for procesamiento in procesamientosAceptados:
+                    file.write(procesamiento + "\n")
+
+                file.write("\nProcesamientos Rechazados:\n")
+                for procesamiento in procesamientosRechazados:
+                    file.write(procesamiento + "\n")
+
+                file.write("\nProcesamientos Abortados:\n")
+                for procesamiento in procesamientosAbortados:
+                    file.write(procesamiento + "\n")
+
+                file.write(f"\nNúmero de posibles procesamientos: {num_posibles_procesamientos}\n")
+                file.write(f"Número de procesamientos de aceptación: {num_aceptados}\n")
+                file.write(f"Número de procesamientos de rechazo: {num_rechazados}\n")
+                file.write(f"Número de procesamientos abortados: {num_abortados}\n\n")
+
+                if imprimirPantalla:
+                    print(f"Cadena: {cadena}")
+                    print("Procesamientos Aceptados:")
+                    for procesamiento in procesamientosAceptados:
+                        print(procesamiento)
+
+                    print("\nProcesamientos Rechazados:")
+                    for procesamiento in procesamientosRechazados:
+                        print(procesamiento)
+
+                    print("\nProcesamientos Abortados:")
+                    for procesamiento in procesamientosAbortados:
+                        print(procesamiento)
+
+                    print(f"\nNúmero de posibles procesamientos: {num_posibles_procesamientos}")
+                    print(f"Número de procesamientos de aceptación: {num_aceptados}")
+                    print(f"Número de procesamientos de rechazo: {num_rechazados}")
+                    print(f"Número de procesamientos abortados: {num_abortados}\n")
+
     #2
 def constructor(nombreArchivo):
         try:
@@ -279,3 +352,77 @@ afn_instancia = AFN(['a', 'b'], ['q0', 'q1', 'q2', 'q3'], 'q0', ['q1'], {
     ('q3', 'a'): [],
     ('q3', 'b'): ['q3'],
 })
+# afn_instancia.toString()
+# afn_instancia.imprimirAFNSimplificado()
+# afn_instancia.exportar("prueba")
+# afn_instancia.procesarCadena("aaaa")
+# afn_instancia.procesarCadenaConDetalles("aaa")
+# nuevainstancia = constructor("prueba")
+# nuevainstancia.computarTodosLosProcesamientos("aaa","prueba")
+
+# listaCadenas = ["ab", "abc", "abcd"]
+# # afn_instancia.procesarListaCadenas(listaCadenas, "resultados.txt", imprimirPantalla=True)
+# print(afn_instancia.procesarListaCadenasConversion("aaaa"))
+
+listaCadenas = ["abababa", "aaaab", "aabbcc","a"]
+
+# Especificar el nombre del archivo de resultados
+nombreArchivo = "resultados.txt"
+
+# Indicar si se imprimirán los resultados en pantalla
+imprimirPantalla = False
+
+# Procesar la lista de cadenas con detalles y guardar los resultados en el archivo
+afn_instancia.procesarListaCadenasConversion(listaCadenas, nombreArchivo, imprimirPantalla)
+
+
+###ACÁ PRUEBO PQ NO PUEDO IMPORTAR
+
+class ProcesamientoCadenaAFN:
+    def __init__(self, cadena):
+        self.cadena = cadena
+        self.esAceptada = False
+        self.listaProcesamientosAbortados = []
+        self.listaProcesamientosAceptacion = []
+        self.listaProcesamientosRechazados = []
+
+    def procesar(self, automata):
+        self.procesarRecursivo(self.cadena, automata.estadoInicial, "", automata)
+
+    def procesarRecursivo(self, cadena, estado_actual, procesamiento, automata):
+        procesamiento += f"-> {estado_actual}"
+        if not cadena:
+            if estado_actual in automata.estadosAceptados:
+                self.esAceptada = True
+                self.listaProcesamientosAceptacion.append(procesamiento)
+            else:
+                self.listaProcesamientosRechazados.append(procesamiento)
+            return
+
+        simbolo = cadena[0]
+        simbolo_str = str(simbolo)
+        restante = cadena[1:]
+
+        if (estado_actual, simbolo_str) in automata.transicion:
+            for estado_siguiente in automata.transicion[(estado_actual, simbolo_str)]:
+                self.procesarRecursivo(restante, estado_siguiente, procesamiento + f"({simbolo_str})", automata)
+        else:
+            self.listaProcesamientosAbortados.append(procesamiento + f"({simbolo_str})")
+
+    def imprimirResultados(self):
+        print(f"Cadena: {self.cadena}")
+        print(f"Es aceptada: {self.esAceptada}")
+        print("Procesamientos de aceptación:")
+        for procesamiento in self.listaProcesamientosAceptacion:
+            print(procesamiento)
+        print("Procesamientos rechazados:")
+        for procesamiento in self.listaProcesamientosRechazados:
+            print(procesamiento)
+        print("Procesamientos abortados:")
+        for procesamiento in self.listaProcesamientosAbortados:
+            print(procesamiento)
+
+cadena = "aaaa"  
+procesamiento = ProcesamientoCadenaAFN(cadena)
+procesamiento.procesar(afn_instancia) 
+procesamiento.imprimirResultados()
