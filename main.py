@@ -4,13 +4,13 @@ from Punto_C.AFN import AutomataNoDeterminista
 from Punto_E.procesamiento_automatas import ProcesamientoCadenaAFN
 from Punto_F.pruebas import prueba
 from Punto_G.aleatorios import claseValidacion
-from AFNLambda import AFNLambda
+# from AFNLambda import AFNLambda
 # from prueba.ayuda import final #asi se maneja como un modulo, y modulos dentro de ese mismo modulo, se cachea para mayor velocidad
 
-listaAFN = prueba()
+# listaAFN = prueba()
 # claseValidacion()
 # AFNLambda()
-ProcesamientoCadenaAFN()
+# ProcesamientoCadenaAFN()
 afn_instancia = AutomataNoDeterminista(['a', 'b'], ['q0', 'q1', 'q2', 'q3'], 'q0', ['q1'], {
     ('q0', 'a'): ['q0','q1','q3'],
     ('q0', 'b'): [],
