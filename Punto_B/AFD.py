@@ -11,6 +11,15 @@ class AFD_class:
         setattr(self,'estadosInaccesibles',[])
         self.verificarCorregirCompletitudAFD()
     
+        ##Para la conversión AFN TO AFD
+    
+    #Nuevos métodos para la construcción del AFD basado en una instancia de AFN
+    def agregarEstado(self, estado):
+        self.estados.append(estado)
+
+    def agregarTransicion(self, estado, simbolo, destino):
+        self.transicion[(estado, simbolo)] = destino
+    
     def verificarCorregirCompletitudAFD(self):
         alfabeto = self.alfabeto
         estados = self.estados
@@ -65,8 +74,7 @@ class AFD_class:
                 estadosLimbo.append(estado)
 
         self.estadosLimbo = estadosLimbo
-
-        
+     
     def hallarEstadosInaccesibles(self):
         # Inicializar la lista de estados accesibles con el estado inicial
         estados_accesibles = []
@@ -130,6 +138,36 @@ class AFD_class:
 
         print(output)
         
+        return output
+    
+    #Metodo para imprimir el AFD recibiendolo de la instancia de un AFN.
+    def pasarStringAFNtoAFD(self):
+        # Imprimir estados, alfabeto y estado inicial
+        output = "#!dfa\n#alphabet\n"
+
+        output += f"{self.alfabeto[0]}-{self.alfabeto[-1]}\n#states\n"
+
+        # Imprimir estados
+        for estado in self.estados:
+            output += f"{estado}\n"
+
+        # Imprimir estado inicial
+        output += f"#initial\n{self.estadoInicial}\n"
+
+        # Imprimir estados de aceptación
+        output += "#accepting\n"
+        for estado in self.estadosAceptados:
+            output += f"{estado}\n"
+
+        # Imprimir transiciones
+        output += "#transitions\n"
+        for estado in self.estados:
+            for simbolo in self.alfabeto:
+                destino = self.transicion.get((estado, simbolo), None)
+                if destino is not None:
+                    output += f"{estado}:{simbolo}>{destino}\n"
+
+        print(output)
         return output
     
     def imprimirAFDSimplificado(self):
