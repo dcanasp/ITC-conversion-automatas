@@ -1,5 +1,5 @@
 from Punto_B.AFD import AFD_class
-from Punto_C.AFN import AutomataNoDeterminista
+from Punto_C.AFN import AFN
 class prueba:
     def __init__(self): 
         self.main()
@@ -43,7 +43,7 @@ class prueba:
             'q3': {'0': {'q3'}, '1': {'q3'}}
         }
         # (self,alfabeto,estados,estadoInicial,estadosAceptados,delta)
-        afn1 = AutomataNoDeterminista(alfabeto,estados, estado_inicial,estados_aceptacion, delta)
+        afn1 = AFN(alfabeto,estados, estado_inicial,estados_aceptacion, delta)
         afn1.procesarCadena
         print(afn1.procesarCadena('0001'))
         return

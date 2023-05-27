@@ -1,398 +1,428 @@
-class AutomataNoDeterminista:
-    def __init__(self, alfabeto, estados, estado_inicial, estados_aceptacion, delta):
-        self.alfabeto = alfabeto
-        self.estados = estados
-        self.estado_inicial = estado_inicial
-        self.estados_aceptacion = estados_aceptacion
-        self.estados_inaccesibles = set()  # Atributo para almacenar los estados inaccesibles
-        self.delta = delta
-    
-    # def __init__(self):
-    #     # inicializar atributos
-    #     self.alfabeto = set()
-    #     self.estados = set()
-    #     self.estadoInicial = None
-    #     self.estadosAceptacion = set()
-    #     self.estadosInaccesibles = set()
-    #     self.tablaTransiciones = {}
 
+class AFN():
+    #1
+    def __init__(self, alfabeto, estados, estadoInicial, estadosAceptacion, delta):
+        setattr(self, 'alfabeto', alfabeto)
+        setattr(self, 'estados', estados)
+        setattr(self, 'estadoInicial', estadoInicial)
+        setattr(self, 'estadosAceptados', estadosAceptacion)
+        setattr(self, 'transicion', delta)
+        setattr(self, 'estadosInaccesibles', [])
+    
+    #3
     def hallarEstadosInaccesibles(self):
-        # Realizamos un recorrido BFS (Breadth-First Search) para encontrar los estados inaccesibles
+        estados_alcanzables = set()
+        estados_visitados = set([self.estadoInicial])
 
-        # Creamos un conjunto para almacenar los estados accesibles
-        estados_accesibles = {self.estado_inicial}
+        while estados_visitados:
+            estado_actual = estados_visitados.pop()
+            estados_alcanzables.add(estado_actual)
+            transiciones = self.obtener_transiciones_desde_estado(estado_actual)
+            for _, destinos in transiciones:
+                for destino in destinos:
+                    if destino not in estados_alcanzables:
+                        estados_visitados.add(destino)
 
-        # Creamos una cola para realizar el recorrido BFS
-        cola = [self.estado_inicial]
+        estados_inaccesibles = set(self.estados) - estados_alcanzables
 
-        while cola:
-            estado_actual = cola.pop(0)
+        # Eliminar transiciones hacia estados inaccesibles
+        self.transicion = {(origen, simbolo): destinos for (origen, simbolo), destinos in self.transicion.items() if origen not in estados_inaccesibles and all(destino not in estados_inaccesibles for destino in destinos)}
 
-            # Obtenemos los estados siguientes desde el estado actual
-            estados_siguientes = set()
-            for simbolo in self.alfabeto:
-                if estado_actual in self.delta and simbolo in self.delta[estado_actual]:
-                    estados_siguientes.update(self.delta[estado_actual][simbolo])
+        self.estadosInaccesibles = estados_inaccesibles
 
-            # Agregamos los estados siguientes al conjunto de estados accesibles
-            nuevos_estados_accesibles = estados_siguientes - estados_accesibles
-            estados_accesibles.update(nuevos_estados_accesibles)
-
-            # Agregamos los nuevos estados a la cola para seguir recorriendo
-            cola.extend(nuevos_estados_accesibles)
-
-        # Los estados inaccesibles serán aquellos que no están en el conjunto de estados accesibles
-        self.estados_inaccesibles = self.estados - estados_accesibles
-
-
-    def toString(self):
-        # Imprimir representación del autómata
-
-        # Imprimir estados
-        print("Estados:", self.estados)
-
-        # Imprimir estado inicial
-        print("Estado inicial:", self.estado_inicial)
-
-        # Imprimir estados de aceptación
-        print("Estados de aceptación:", self.estados_aceptacion)
-
-        # Imprimir estados inaccesibles
-        print("Estados inaccesibles:", self.estados_inaccesibles)
-
-        # Imprimir tabla de transiciones
-        print("Tabla de transiciones:")
-        for estado_actual in self.delta:
-            for simbolo in self.delta[estado_actual]:
-                estados_siguientes = self.delta[estado_actual][simbolo]
-                print(f"Delta({estado_actual}, {simbolo}) = {estados_siguientes}")
-
-
-    def imprimirAFNSimplificado(self):
-        # Imprimir representación simplificada del autómata
-
-        # Imprimir estados
-        print("Estados:", self.estados - self.estados_inaccesibles)
-
-        # Imprimir estado inicial
-        print("Estado inicial:", self.estado_inicial)
-
-        # Imprimir estados de aceptación
-        print("Estados de aceptación:", self.estados_aceptacion)
-
-        # Imprimir tabla de transiciones
-        print("Tabla de transiciones:")
-        for estado_actual in self.delta:
-            # Si el estado actual no es inaccesible
-            if estado_actual not in self.estados_inaccesibles:
-                for simbolo in self.delta[estado_actual]:
-                    estados_siguientes = self.delta[estado_actual][simbolo]
-                    # Si los estados siguientes no son inaccesibles
-                    estados_siguientes = estados_siguientes - self.estados_inaccesibles
-                    print(f"Delta({estado_actual}, {simbolo}) = {estados_siguientes}")
-
-    # def AFNtoAFD(afn): #FALTA
-        
+    def obtener_transiciones_desde_estado(self, estado):
+        return [(origen, destinos) for (origen, simbolo), destinos in self.transicion.items() if origen == estado]
     
+    #4
+    def toString(self):
+        output = ''
+        output += '#!nfa\n'
+        output += '#alphabet\n'
+        output += f"{self.alfabeto[0]}-{self.alfabeto[-1]}\n"
+        output += '#states\n'
+        for estado in self.estados:
+            output += ''.join(estado) + '\n'
+        output += '#initial\n'
+        output += self.estadoInicial + '\n'
+        output += '#accepting\n'
+        for estado in self.estadosAceptados:
+            output += ''.join(estado) + '\n'
+        output += '#transitions\n'
+        for (origen, simbolo), destinos in self.transicion.items():
+            destinos_str = ';'.join(destinos)
+            output += f'{origen}:{simbolo}>{destinos_str}\n'
+        return output
+
+    #5
+    def imprimirAFNSimplificado(self):
+        self.hallarEstadosInaccesibles()
+        estados_minimizados = set(self.estados) - set(self.estadosInaccesibles)
+        print('#!nfa')
+        print('#alphabet')
+        print('-'.join(self.alfabeto))
+        print('#states')
+        print(' '.join(estados_minimizados))
+        print('#initial')
+        print(self.estadoInicial)
+        print('#accepting')
+        print(' '.join(self.estadosAceptados))
+        print('#transitions')
+        for (origen, simbolo), destinos in self.transicion.items():
+            if origen in estados_minimizados:
+                destinos_minimizados = [destino for destino in destinos if destino in estados_minimizados]
+                if destinos_minimizados:
+                    destinos_str = ';'.join(destinos_minimizados)
+                    print(f'{origen}:{simbolo}>{destinos_str}')
+                    
+    #6
+    def exportar(self, nombreArchivo):
+        archivo = open(nombreArchivo+".nfa","w")
+        archivo.write(self.toString())
+        return archivo.close()
+    
+
+    #8
     def procesarCadena(self, cadena):
-            estados_actuales = {self.estado_inicial}
+        # Inicializar el conjunto de estados actuales con el estado inicial
+        estados_actuales = set([self.estadoInicial])
 
-            for simbolo in cadena:
-                estados_siguientes = set()
-                
-                for estado_actual in estados_actuales:
-                    if (estado_actual, simbolo) in self.delta:
-                        estados_siguientes.update(self.delta[(estado_actual, simbolo)])
-
-                estados_actuales = estados_siguientes
-
-            return any(estado in self.estadosAceptacion for estado in estados_actuales)
-
-    def procesarCadenaConDetalles(self, cadena):
-        # Procesar la cadena, determinar si es aceptada o rechazada, e imprimir los estados tomados
-
-        estado_actual = self.estadoInicial
-        estados_tomados = [estado_actual]
-
+        # Recorrer la cadena y actualizar los estados actuales en cada transición
         for simbolo in cadena:
-            # Verificar si el símbolo pertenece al alfabeto
-            if simbolo not in self.alfabeto:
-                return False  # Cadena rechazada
+            # Obtener los estados siguientes a partir de los estados actuales y el símbolo actual
+            estados_siguientes = set()
+            for estado_actual in estados_actuales:
+                if (estado_actual, simbolo) in self.transicion:
+                    estados_siguientes.update(self.transicion[(estado_actual, simbolo)])
 
-            # Obtener los estados siguientes a través de la transición
-            if estado_actual in self.delta and simbolo in self.delta[estado_actual]:
-                estados_siguientes = self.delta[estado_actual][simbolo]
-            else:
-                return False  # Cadena rechazada
+            # Actualizar los estados actuales con los estados siguientes
+            estados_actuales = estados_siguientes
 
-            # Actualizar el estado actual con los estados siguientes
-            estado_actual = estados_siguientes
+        # Verificar si al menos uno de los estados actuales es un estado de aceptación
+        for estado_actual in estados_actuales:
+            if estado_actual in self.estadosAceptados:
+                return True
 
-            estados_tomados.append(estado_actual)
+        return False
+    
+    #9
+    def procesarCadenaConDetalles(self, cadena):
+        # Inicializar el estado actual con el estado inicial
+        estado_actual = self.estadoInicial
+
+        # Imprimir el estado inicial y la cadena de entrada
+        print(f"[{estado_actual},{cadena}]->", end="")
+
+        # Recorrer la cadena y actualizar el estado actual en cada transición
+        for i, simbolo in enumerate(cadena):
+            # Obtener los estados siguientes a partir del estado actual y el símbolo actual
+            estados_siguientes = self.transicion.get((estado_actual, simbolo), [])
+
+            # Si no hay transición para el símbolo actual, la cadena es rechazada
+            if not estados_siguientes:
+                print("Cadena rechazada.")
+                return False
+
+            # Actualizar el estado actual con el primer estado siguiente
+            estado_actual = estados_siguientes[0]
+
+            # Imprimir la transición si la cadena no se ha procesado completamente
+            if i < len(cadena) - 1:
+                cadena_restante = cadena[i+1:]
+                print(f"[{estado_actual},{cadena_restante}]->", end="")
 
         # Verificar si el estado actual es un estado de aceptación
-        if estado_actual in self.estados_aceptacion:
-            # Cadena aceptada
-            print(f"La cadena '{cadena}' es aceptada por el autómata.")
-            print("Estados tomados:")
-            for estado in estados_tomados:
-                print(estado)
-            return True
+        if estado_actual in self.estadosAceptados:
+            return("Aceptación.")
         else:
-            # Cadena rechazada
-            print(f"La cadena '{cadena}' es rechazada por el autómata.")
-            return False
+            return("Cadena rechazada.")
 
-
+    #10
     def computarTodosLosProcesamientos(self, cadena, nombreArchivo):
-        procesamientos_aceptados = []
-        procesamientos_rechazados = []
-        procesamientos_abortados = []
-        num_procesamientos = 0
+        procesamientosAceptados = []
+        procesamientosRechazados = []
+        procesamientosAbortados = []
 
-        with open(nombreArchivo + "Aceptadas.txt", "w") as archivo_aceptadas:
-            with open(nombreArchivo + "Rechazadas.txt", "w") as archivo_rechazadas:
-                with open(nombreArchivo + "Abortadas.txt", "w") as archivo_abortadas:
-                    for procesamiento in self.generarProcesamientos(cadena):
-                        num_procesamientos += 1
+        def procesar(cadena, estado_actual, procesamiento):
+            procesamiento += f"-> {estado_actual}"
+            if not cadena:
+                if estado_actual in self.estadosAceptados:
+                    procesamientosAceptados.append(procesamiento + "-> Aceptación")
+                else:
+                    procesamientosRechazados.append(procesamiento + "-> Rechazo")
+                return
 
-                        estado_actual = self.estadoInicial
-                        transiciones = []
-                        aceptado = False
+            simbolo = cadena[0]
+            restante = cadena[1:]
 
-                        for simbolo in procesamiento:
-                            estado_siguiente = self.transicion(estado_actual, simbolo)
-                            transiciones.append((estado_actual, simbolo, estado_siguiente))
-                            estado_actual = estado_siguiente
+            if (estado_actual, simbolo) in self.transicion:
+                for estado_siguiente in self.transicion[(estado_actual, simbolo)]:
+                    procesar(restante, estado_siguiente, procesamiento + f"({simbolo})")
 
-                        if estado_actual in self.estadosAceptacion:
-                            aceptado = True
-                            procesamientos_aceptados.append(transiciones)
-                            archivo_aceptadas.write(self.formatoProcesamiento(transiciones) + "\n")
-                        elif estado_actual in self.estados:
-                            procesamientos_rechazados.append(transiciones)
-                            archivo_rechazadas.write(self.formatoProcesamiento(transiciones) + "\n")
-                        else:
-                            procesamientos_abortados.append(transiciones)
-                            archivo_abortadas.write(self.formatoProcesamiento(transiciones) + "\n")
+            procesamientosAbortados.append(procesamiento + "-> Abortado")
 
-                        print("Procesamiento:", self.formatoProcesamiento(transiciones))
-                        print("Estado Final:", estado_actual)
-                        print("Aceptado:", aceptado)
-                        print("-------------------------")
+        procesar(cadena, self.estadoInicial, "")
 
+        # Guardar los resultados en archivos
+        with open(f"{nombreArchivo}Aceptadas.txt", "w") as file:
+            for procesamiento in procesamientosAceptados:
+                file.write(procesamiento + "\n")
+
+        with open(f"{nombreArchivo}Rechazadas.txt", "w") as file:
+            for procesamiento in procesamientosRechazados:
+                file.write(procesamiento + "\n")
+
+        with open(f"{nombreArchivo}Abortadas.txt", "w") as file:
+            for procesamiento in procesamientosAbortados:
+                file.write(procesamiento + "\n")
+
+        # Imprimir los resultados en pantalla
+        print("Procesamientos Aceptados:")
+        for procesamiento in procesamientosAceptados:
+            print(procesamiento)
+
+        print("\nProcesamientos Rechazados:")
+        for procesamiento in procesamientosRechazados:
+            print(procesamiento)
+
+        print("\nProcesamientos Abortados:")
+        for procesamiento in procesamientosAbortados:
+            print(procesamiento)
+
+        num_procesamientos = len(procesamientosAceptados) + len(procesamientosRechazados) + len(procesamientosAbortados)
+        print(f"\nNúmero de procesamientos realizados: {num_procesamientos}")
         return num_procesamientos
-
-    def generarProcesamientos(self, cadena):
-        procesamientos = [[]]
-        for simbolo in cadena:
-            nuevos_procesamientos = []
-            for procesamiento in procesamientos:
-                estado_actual = procesamiento[-1] if procesamiento else self.estadoInicial
-                transiciones = self.tablaTransiciones.get((estado_actual, simbolo), set())
-                for estado in transiciones:
-                    nuevos_procesamientos.append(procesamiento + [estado])
-            procesamientos = nuevos_procesamientos
-        return procesamientos
-
-    def transicion(self, estado_actual, simbolo):
-        transiciones = self.tablaTransiciones.get((estado_actual, simbolo), set())
-        if len(transiciones) == 1:
-            return next(iter(transiciones))
-        return None
-
-    def formatoProcesamiento(self, procesamiento):
-        return "->".join(f"{transicion[0]}({transicion[1]})" for transicion in procesamiento)
-
-
-    def procesarListaCadenas(self, listaCadenas, nombreArchivo, imprimirPantalla):
+    
+    #14
+    def procesarListaCadenasConversion(self, listaCadenas, nombreArchivo, imprimirPantalla):
         if not nombreArchivo:
             nombreArchivo = "resultados.txt"
 
-        with open(nombreArchivo, "w") as archivo:
+        with open(nombreArchivo, "w") as file:
             for cadena in listaCadenas:
-                procesamientos_aceptados = []
-                procesamientos_rechazados = []
-                procesamientos_abortados = []
+                procesamientosAceptados = []
+                procesamientosRechazados = []
+                procesamientosAbortados = []
 
-                for procesamiento in self.generarProcesamientos(cadena):
-                    estado_actual = self.estadoInicial
-                    transiciones = []
+                def procesar(cadena, estado_actual, procesamiento):
+                    procesamiento += f"-> {estado_actual}"
+                    if not cadena:
+                        if estado_actual in self.estadosAceptados:
+                            procesamientosAceptados.append(procesamiento + "-> Aceptación")
+                        else:
+                            procesamientosRechazados.append(procesamiento + "-> Rechazo")
+                        return
 
-                    for simbolo in procesamiento:
-                        estado_siguiente = self.transicion(estado_actual, simbolo)
-                        transiciones.append((estado_actual, simbolo))
-                        estado_actual = estado_siguiente
+                    simbolo = cadena[0]
+                    restante = cadena[1:]
 
-                    if estado_actual in self.estadosAceptacion:
-                        procesamientos_aceptados.append(transiciones)
-                    elif estado_actual in self.estados:
-                        procesamientos_rechazados.append(transiciones)
-                    else:
-                        procesamientos_abortados.append(transiciones)
+                    if (estado_actual, simbolo) in self.transicion:
+                        for estado_siguiente in self.transicion[(estado_actual, simbolo)]:
+                            procesar(restante, estado_siguiente, procesamiento + f"({simbolo})")
 
-                num_procesamientos = len(procesamientos_aceptados) + len(procesamientos_rechazados) + len(procesamientos_abortados)
-                num_procesamientos_aceptados = len(procesamientos_aceptados)
-                num_procesamientos_abortados = len(procesamientos_abortados)
-                num_procesamientos_rechazados = len(procesamientos_rechazados)
-                cadena_aceptada = num_procesamientos_aceptados > 0
+                    procesamientosAbortados.append(procesamiento + "-> Abortado")
+
+                procesar(cadena, self.estadoInicial, "")
+
+                num_posibles_procesamientos = len(procesamientosAceptados) + len(procesamientosRechazados) + len(procesamientosAbortados)
+                num_aceptados = len(procesamientosAceptados)
+                num_rechazados = len(procesamientosRechazados)
+                num_abortados = len(procesamientosAbortados)
+
+                file.write(f"Cadena: {cadena}\n")
+                file.write("Procesamientos Aceptados:\n")
+                for procesamiento in procesamientosAceptados:
+                    file.write(procesamiento + "\n")
+
+                file.write("\nProcesamientos Rechazados:\n")
+                for procesamiento in procesamientosRechazados:
+                    file.write(procesamiento + "\n")
+
+                file.write("\nProcesamientos Abortados:\n")
+                for procesamiento in procesamientosAbortados:
+                    file.write(procesamiento + "\n")
+
+                file.write(f"\nNúmero de posibles procesamientos: {num_posibles_procesamientos}\n")
+                file.write(f"Número de procesamientos de aceptación: {num_aceptados}\n")
+                file.write(f"Número de procesamientos de rechazo: {num_rechazados}\n")
+                file.write(f"Número de procesamientos abortados: {num_abortados}\n\n")
 
                 if imprimirPantalla:
-                    print("Cadena:", cadena)
+                    print(f"Cadena: {cadena}")
                     print("Procesamientos Aceptados:")
-                    for procesamiento in procesamientos_aceptados:
-                        print(self.formatoProcesamiento(procesamiento))
-                    print("Número de Procesamientos:", num_procesamientos)
-                    print("Número de Procesamientos Aceptados:", num_procesamientos_aceptados)
-                    print("Número de Procesamientos Abortados:", num_procesamientos_abortados)
-                    print("Número de Procesamientos Rechazados:", num_procesamientos_rechazados)
-                    print("Aceptada:", cadena_aceptada)
-                    print("-------------------------")
+                    for procesamiento in procesamientosAceptados:
+                        print(procesamiento)
 
-                archivo.write(f"Cadena: {cadena}\n")
-                archivo.write("Procesamientos Aceptados:\n")
-                for procesamiento in procesamientos_aceptados:
-                    archivo.write(f"{self.formatoProcesamiento(procesamiento)}\n")
-                archivo.write(f"Número de Procesamientos: {num_procesamientos}\n")
-                archivo.write(f"Número de Procesamientos Aceptados: {num_procesamientos_aceptados}\n")
-                archivo.write(f"Número de Procesamientos Abortados: {num_procesamientos_abortados}\n")
-                archivo.write(f"Número de Procesamientos Rechazados: {num_procesamientos_rechazados}\n")
-                archivo.write(f"Aceptada: {cadena_aceptada}\n")
-                archivo.write("-------------------------\n")
+                    print("\nProcesamientos Rechazados:")
+                    for procesamiento in procesamientosRechazados:
+                        print(procesamiento)
 
-    def procesarCadenaConversion(self, cadena):
-        # Convertir el AFN a un AFD
-        afd = self.AFNtoAFD()
+                    print("\nProcesamientos Abortados:")
+                    for procesamiento in procesamientosAbortados:
+                        print(procesamiento)
 
-        # Procesar la cadena con el AFD
-        return afd.procesarCadena(cadena)
+                    print(f"\nNúmero de posibles procesamientos: {num_posibles_procesamientos}")
+                    print(f"Número de procesamientos de aceptación: {num_aceptados}")
+                    print(f"Número de procesamientos de rechazo: {num_rechazados}")
+                    print(f"Número de procesamientos abortados: {num_abortados}\n")
 
-    def procesarCadenaConDetallesConversion(self, cadena):
-        # Convertir el AFN a un AFD
-        afd = self.AFNtoAFD()
+    #2
+def constructor(nombreArchivo):
+        try:
+            with open(nombreArchivo+".nfa","r") as archivo:
+                datos = archivo.readlines()
+                for i in range(len(datos)):
+                    datos[i] = datos[i].strip()
+                estados = []
+                estadosAceptados = []
+                transiciones = {}
+                
+                for i in range(len(datos)):
+                    if datos[i] == '#alphabet':
+                        cadena = datos[i+1]
+                        inicio = ord(cadena[0])
+                        fin = ord(cadena[-1])
+                        alfabeto = [chr(i) for i in range(inicio, fin+1)]
+                    if datos[i] == '#states':
+                        for j in range(i+1,len(datos)):
+                            if datos[j] == '#initial':
+                                break
+                            else:
+                                estados.append(datos[j])
+                    if datos[i] == '#initial':
+                        estadoInicial=datos[i+1]
+                    if datos[i] == '#accepting':
+                        for j in range(i+1,len(datos)):
+                            if datos[j] == '#transitions':
+                                break
+                            else:
+                                estadosAceptados.append(datos[j])
+                    if datos[i] == '#transitions':
+                        for j in range(i+1,len(datos)):
+                            estado, transicion = datos[j].split(':')
+                            caracter, nuevo_estado = transicion.split('>')
+                            nuevonuevo_estado = nuevo_estado.split(';')
+                            # print(estado,caracter,nuevonuevo_estado)
+                            tuplas = (estado,caracter)
+                            transiciones[tuplas]=list(nuevonuevo_estado)
+                            # print(transiciones)
+            # print(alfabeto,estados,estadoInicial,estadosAceptados,transiciones)
+            return AFN(alfabeto, estados, estadoInicial, estadosAceptados, transiciones)
 
-        # Procesar la cadena con el AFD y obtener los detalles
-        aceptada, procesamientos = afd.procesarCadenaConDetalles(cadena)
-
-        # Imprimir los estados del AFD que va tomando al procesar cada símbolo
-        for estado, simbolo in procesamientos:
-            print("Estado: {}".format(estado))
-
-        # Retornar el resultado de aceptación/rechazo
-        return aceptada
+        except(FileNotFoundError):
+            print("No se encontró el archivo")
     
-
-    
-def procesarListaCadenasConversion(self, listaCadenas, nombreArchivo, imprimirPantalla=True):
-    # Verificar si el nombre de archivo es válido, de lo contrario asignar uno por defecto
-    if not nombreArchivo:
-        nombreArchivo = "procesamientos.txt"
-
-    # Abrir el archivo para escribir los resultados
-    with open(nombreArchivo, "w") as archivo:
-        for cadena in listaCadenas:
-            # Convertir el AFN a un AFD
-            afd = self.AFNtoAFD()
-
-            # Procesar la cadena con el AFD y obtener los detalles
-            aceptada, procesamientos = afd.procesarCadenaConDetalles(cadena)
-
-            # Imprimir los detalles en el archivo
-            archivo.write("Cadena: {}\n".format(cadena))
-            archivo.write("Detalles:\n")
-            for estado, simbolo in procesamientos:
-                archivo.write("{} - {}\n".format(estado, simbolo))
-            archivo.write("Aceptada: {}\n".format(aceptada))
-            archivo.write("\n")
-
-            # Imprimir en pantalla si es necesario
-            if imprimirPantalla:
-                print("Cadena: {}".format(cadena))
-                print("Detalles:")
-                for estado, simbolo in procesamientos:
-                    print("{} - {}".format(estado, simbolo))
-                print("Aceptada: {}".format(aceptada))
-                print()
-
-    # Imprimir mensaje de finalización
-    print("Procesamiento de cadenas completado. Resultados guardados en el archivo: {}".format(nombreArchivo))
-"""afn = AFN() #prueba procesarlistaCadenas
-# Configurar el AFN
-
-listaCadenas = ["00101", "01010", "11011"]
-nombreArchivo = "resultados"
-imprimirPantalla = True
-
-afn.procesarListaCadenas(listaCadenas, nombreArchivo, imprimirPantalla)"""
-"""afn = AFN()  #prueba procesamiento
-# Configurar el AFN
-
-cadena = "00101"
-nombreArchivo = "procesamientos"
-num_procesamientos = afn.computarTodosLosProcesamientos(cadena, nombreArchivo)
-print("Número de Procesamientos:", num_procesamientos)"""
-
-# Creamos una instancia del autómata
-"""automata = AutomataNoDeterminista(alfabeto, estados, estado_inicial, estados_aceptacion, delta)
-
-# Definimos los atributos del autómata
-alfabeto = {'0', '1'}
-estados = {'q0', 'q1', 'q2', 'q3'}
-estado_inicial = 'q0'
-estados_aceptacion = {'q3'}
-estados_inaccesibles = set()
-delta = {
-    'q0': {'0': {'q1'}, '1': {'q0', 'q1'}},
-    'q1': {'0': {'q2'}, '1': {'q0'}},
-    'q2': {'0': {'q2'}, '1': {'q2'}},
-    'q3': {'0': {'q3'}, '1': {'q3'}}
-}
+# INSTANCIA
+afn_instancia = AFN(['a', 'b', 'c'], ['q0', 'q1', 'q2', 'q3'], 'q0', ['q1'], {
+    ('q0', 'a'): ['q1','q1','q3'],
+    ('q0', 'b'): [],
+    ('q1', 'a'): ['q1'],
+    ('q1', 'b'): ['q2'],
+    ('q2', 'a'): [],
+    ('q2', 'b'): ['q1','q2'],
+    ('q3', 'a'): [],
+    ('q3', 'b'): ['q3'],
+})
+# afd = afn_instancia.toAFD()
+# afd.toString()
+# # print("instanciaalfabeto")
+# # print(afn_instancia.estados)
+# print(afn_instancia.toString())
+# print(afn_instancia.imprimirAFNSimplificado())
+# afn_instancia.exportar("instancia")
+# segundainstancia =constructor("instancia")
+# print("######################################### SEGUNDA")
+# print(segundainstancia.imprimirAFNSimplificado())
+# print(afn_instancia.procesarCadenaConDetalles("aaaa"))
+# # afn_instancia.toString()
+# # print("#############################################################################################################")
+# # afn_instancia.imprimirAFNSimplificado()
+# # afn_instancia.exportar("AFN_prueba")
 
 
-# Hallamos los estados inaccesibles
-automata.hallarEstadosInaccesibles()
+# AFN_prueba =constructor("AFN_prueba")
 
-# Mostramos los estados inaccesibles
-print("Estados inaccesibles:", automata.estados_inaccesibles)
-automata.toString()
-# Imprimimos el autómata simplificado
-automata.imprimirAFNSimplificado()
-#procesamos una cadena
-cadena = '0011'
-es_aceptada = automata.procesarCadena(cadena)
-if es_aceptada:
-    print(f"La cadena '{cadena}' es aceptada por el autómata.")
-else:
-    print(f"La cadena '{cadena}' es rechazada por el autómata.")"""
-"""
-afn = AutomataNoDeterminista()
+# print(AFN_prueba.toString())
+afn_instancia = AFN(['a', 'b'], ['q0', 'q1', 'q2', 'q3'], 'q0', ['q1'], {
+    ('q0', 'a'): ['q0','q1','q3'],
+    ('q0', 'b'): [],
+    ('q1', 'a'): ['q1'],
+    ('q1', 'b'): ['q2'],
+    ('q2', 'a'): [],
+    ('q2', 'b'): ['q1','q2'],
+    ('q3', 'a'): [],
+    ('q3', 'b'): ['q3'],
+})
+# afn_instancia.toString()
+# afn_instancia.imprimirAFNSimplificado()
+# afn_instancia.exportar("prueba")
+# afn_instancia.procesarCadena("aaaa")
+# afn_instancia.procesarCadenaConDetalles("aaa")
+# nuevainstancia = constructor("prueba")
+# nuevainstancia.computarTodosLosProcesamientos("aaa","prueba")
 
-# Definir atributos del AFN de ejemplo
-afn.alfabeto = {'0', '1'}
-afn.estados = {'q0', 'q1', 'q2'}
-afn.estadoInicial = 'q0'
-afn.estadosAceptacion = {'q2'}
-afn.tablaTransiciones = {
-    ('q0', '0'): {'q1'},
-    ('q0', '1'): {'q0'},
-    ('q1', '0'): {'q1'},
-    ('q1', '1'): {'q2'},
-    ('q2', '0'): {'q2'},
-    ('q2', '1'): {'q2'},
-}
+# listaCadenas = ["ab", "abc", "abcd"]
+# # afn_instancia.procesarListaCadenas(listaCadenas, "resultados.txt", imprimirPantalla=True)
+# print(afn_instancia.procesarListaCadenasConversion("aaaa"))
 
-# Procesar una cadena de ejemplo
-cadena = '101'
-resultado = afn.procesarCadena(cadena)
+listaCadenas = ["abababa", "aaaab", "aabbcc","a"]
 
-if resultado:
-    print("La cadena '{}' es aceptada por el autómata.".format(cadena))
-else:
-    print("La cadena '{}' es rechazada por el autómata.".format(cadena))
+# Especificar el nombre del archivo de resultados
+nombreArchivo = "resultados.txt"
+
+# Indicar si se imprimirán los resultados en pantalla
+imprimirPantalla = False
+
+# Procesar la lista de cadenas con detalles y guardar los resultados en el archivo
+afn_instancia.procesarListaCadenasConversion(listaCadenas, nombreArchivo, imprimirPantalla)
 
 
-afn = AutomataNoDeterminista()
-# Configurar el AFN
+###ACÁ PRUEBO PQ NO PUEDO IMPORTAR
 
-cadena = "00101"
-afn.procesarCadenaConDetalles(cadena)"""
+class ProcesamientoCadenaAFN:
+    def __init__(self, cadena):
+        self.cadena = cadena
+        self.esAceptada = False
+        self.listaProcesamientosAbortados = []
+        self.listaProcesamientosAceptacion = []
+        self.listaProcesamientosRechazados = []
+
+    def procesar(self, automata):
+        self.procesarRecursivo(self.cadena, automata.estadoInicial, "", automata)
+
+    def procesarRecursivo(self, cadena, estado_actual, procesamiento, automata):
+        procesamiento += f"-> {estado_actual}"
+        if not cadena:
+            if estado_actual in automata.estadosAceptados:
+                self.esAceptada = True
+                self.listaProcesamientosAceptacion.append(procesamiento)
+            else:
+                self.listaProcesamientosRechazados.append(procesamiento)
+            return
+
+        simbolo = cadena[0]
+        simbolo_str = str(simbolo)
+        restante = cadena[1:]
+
+        if (estado_actual, simbolo_str) in automata.transicion:
+            for estado_siguiente in automata.transicion[(estado_actual, simbolo_str)]:
+                self.procesarRecursivo(restante, estado_siguiente, procesamiento + f"({simbolo_str})", automata)
+        else:
+            self.listaProcesamientosAbortados.append(procesamiento + f"({simbolo_str})")
+
+    def imprimirResultados(self):
+        print(f"Cadena: {self.cadena}")
+        print(f"Es aceptada: {self.esAceptada}")
+        print("Procesamientos de aceptación:")
+        for procesamiento in self.listaProcesamientosAceptacion:
+            print(procesamiento)
+        print("Procesamientos rechazados:")
+        for procesamiento in self.listaProcesamientosRechazados:
+            print(procesamiento)
+        print("Procesamientos abortados:")
+        for procesamiento in self.listaProcesamientosAbortados:
+            print(procesamiento)
+
+cadena = "aaaa"  
+procesamiento = ProcesamientoCadenaAFN(cadena)
+procesamiento.procesar(afn_instancia) 
+procesamiento.imprimirResultados()

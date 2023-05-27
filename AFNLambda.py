@@ -1,6 +1,6 @@
-from Punto_C.AFN import AutomataNoDeterminista
+from Punto_C.AFN import AFN
 
-print(AutomataNoDeterminista)
+print(AFN)
 class AFNLambda:
     def obtenerAlfabeto(alfabeto):
         letras=[]
@@ -488,7 +488,7 @@ class AFNLambda:
         return estadosAceptacion
     
     def AFN_LambdaToAFN(self):
-        nuevoAFN=AutomataNoDeterminista()
+        nuevoAFN=AFN()
         estadoInicial=self.estadoInicial
         estados=self.estados
         lambdaClausuraInicial=self.calcularLambdaClausura(estadoInicial)

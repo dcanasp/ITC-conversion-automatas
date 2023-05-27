@@ -1,6 +1,6 @@
 from Punto_A.alfabeto import alfabeto_class
 from Punto_B.AFD import AFD_class #estos son paquetes, son la union de modulos
-from Punto_C.AFN import AutomataNoDeterminista
+from Punto_C.AFN import AFN
 from Punto_E.procesamiento_automatas import ProcesamientoCadenaAFN
 from Punto_F.pruebas import prueba
 from Punto_G.aleatorios import claseValidacion
@@ -11,7 +11,7 @@ from Punto_G.aleatorios import claseValidacion
 # claseValidacion()
 # AFNLambda()
 # ProcesamientoCadenaAFN()
-afn_instancia = AutomataNoDeterminista(['a', 'b'], ['q0', 'q1', 'q2', 'q3'], 'q0', ['q1'], {
+afn_instancia = AFN(['a', 'b'], ['q0', 'q1', 'q2', 'q3'], 'q0', ['q1'], {
     ('q0', 'a'): ['q0','q1','q3'],
     ('q0', 'b'): [],
     ('q1', 'a'): ['q1'],

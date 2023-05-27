@@ -1,0 +1,98 @@
+Cadena: abababa
+Procesamientos Aceptados:
+
+Procesamientos Rechazados:
+
+Procesamientos Abortados:
+-> q0(a)-> q0-> Abortado
+-> q0(a)-> q1(b)-> q2-> Abortado
+-> q0(a)-> q1-> Abortado
+-> q0(a)-> q3(b)-> q3-> Abortado
+-> q0(a)-> q3-> Abortado
+-> q0-> Abortado
+
+Número de posibles procesamientos: 6
+Número de procesamientos de aceptación: 0
+Número de procesamientos de rechazo: 0
+Número de procesamientos abortados: 6
+
+Cadena: aaaab
+Procesamientos Aceptados:
+
+Procesamientos Rechazados:
+-> q0(a)-> q0(a)-> q0(a)-> q0(a)-> q1(b)-> q2-> Rechazo
+-> q0(a)-> q0(a)-> q0(a)-> q0(a)-> q3(b)-> q3-> Rechazo
+-> q0(a)-> q0(a)-> q0(a)-> q1(a)-> q1(b)-> q2-> Rechazo
+-> q0(a)-> q0(a)-> q1(a)-> q1(a)-> q1(b)-> q2-> Rechazo
+-> q0(a)-> q1(a)-> q1(a)-> q1(a)-> q1(b)-> q2-> Rechazo
+
+Procesamientos Abortados:
+-> q0(a)-> q0(a)-> q0(a)-> q0(a)-> q0-> Abortado
+-> q0(a)-> q0(a)-> q0(a)-> q0(a)-> q1-> Abortado
+-> q0(a)-> q0(a)-> q0(a)-> q0(a)-> q3-> Abortado
+-> q0(a)-> q0(a)-> q0(a)-> q0-> Abortado
+-> q0(a)-> q0(a)-> q0(a)-> q1(a)-> q1-> Abortado
+-> q0(a)-> q0(a)-> q0(a)-> q1-> Abortado
+-> q0(a)-> q0(a)-> q0(a)-> q3-> Abortado
+-> q0(a)-> q0(a)-> q0-> Abortado
+-> q0(a)-> q0(a)-> q1(a)-> q1(a)-> q1-> Abortado
+-> q0(a)-> q0(a)-> q1(a)-> q1-> Abortado
+-> q0(a)-> q0(a)-> q1-> Abortado
+-> q0(a)-> q0(a)-> q3-> Abortado
+-> q0(a)-> q0-> Abortado
+-> q0(a)-> q1(a)-> q1(a)-> q1(a)-> q1-> Abortado
+-> q0(a)-> q1(a)-> q1(a)-> q1-> Abortado
+-> q0(a)-> q1(a)-> q1-> Abortado
+-> q0(a)-> q1-> Abortado
+-> q0(a)-> q3-> Abortado
+-> q0-> Abortado
+
+Número de posibles procesamientos: 24
+Número de procesamientos de aceptación: 0
+Número de procesamientos de rechazo: 5
+Número de procesamientos abortados: 19
+
+Cadena: aabbcc
+Procesamientos Aceptados:
+
+Procesamientos Rechazados:
+
+Procesamientos Abortados:
+-> q0(a)-> q0(a)-> q0-> Abortado
+-> q0(a)-> q0(a)-> q1(b)-> q2(b)-> q1-> Abortado
+-> q0(a)-> q0(a)-> q1(b)-> q2(b)-> q2-> Abortado
+-> q0(a)-> q0(a)-> q1(b)-> q2-> Abortado
+-> q0(a)-> q0(a)-> q1-> Abortado
+-> q0(a)-> q0(a)-> q3(b)-> q3(b)-> q3-> Abortado
+-> q0(a)-> q0(a)-> q3(b)-> q3-> Abortado
+-> q0(a)-> q0(a)-> q3-> Abortado
+-> q0(a)-> q0-> Abortado
+-> q0(a)-> q1(a)-> q1(b)-> q2(b)-> q1-> Abortado
+-> q0(a)-> q1(a)-> q1(b)-> q2(b)-> q2-> Abortado
+-> q0(a)-> q1(a)-> q1(b)-> q2-> Abortado
+-> q0(a)-> q1(a)-> q1-> Abortado
+-> q0(a)-> q1-> Abortado
+-> q0(a)-> q3-> Abortado
+-> q0-> Abortado
+
+Número de posibles procesamientos: 16
+Número de procesamientos de aceptación: 0
+Número de procesamientos de rechazo: 0
+Número de procesamientos abortados: 16
+
+Cadena: a
+Procesamientos Aceptados:
+-> q0(a)-> q1-> Aceptación
+
+Procesamientos Rechazados:
+-> q0(a)-> q0-> Rechazo
+-> q0(a)-> q3-> Rechazo
+
+Procesamientos Abortados:
+-> q0-> Abortado
+
+Número de posibles procesamientos: 4
+Número de procesamientos de aceptación: 1
+Número de procesamientos de rechazo: 2
+Número de procesamientos abortados: 1
+
