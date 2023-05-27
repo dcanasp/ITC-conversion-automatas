@@ -5,7 +5,7 @@ from Punto_D.AFNLambda import AFNLambda
 from Punto_E.procesamiento_automatas import ProcesamientoCadenaAFN
 from Punto_F.pruebas import prueba
 from Punto_G.aleatorios import claseValidacion
-AFNLambda()
+# AFNLambda()
 # from prueba.ayuda import final #asi se maneja como un modulo, y modulos dentro de ese mismo modulo, se cachea para mayor velocidad
 
 # listaAFN = prueba()
