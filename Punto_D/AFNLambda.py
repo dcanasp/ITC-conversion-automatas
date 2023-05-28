@@ -1,4 +1,5 @@
 from Punto_C.AFN import AFN
+from graficar import graficosAFNLambda
 class AFNLambda:
     def obtenerAlfabeto(alfabeto):
         letras=[]
@@ -41,7 +42,7 @@ class AFNLambda:
     
     def __init__(self, alfabeto=None, estados=None, estadoInicial=None, estadosAceptacion=None, Delta=None):
         if ".txt" in alfabeto:
-            with open('./Punto_D/PruebaITC.txt', 'r') as file:
+            with open('./Punto_D/'+alfabeto, 'r') as file:
                 contenido = file.read()
                 partes = contenido.split('#')
             i=0
@@ -514,3 +515,7 @@ class AFNLambda:
         nuevoAFN.tablaTransiciones.fromkeys(transicionesFinales)
 
         return nuevoAFN
+
+    def graficar(self):
+        return graficosAFNLambda(self.alfabeto,self.estados,self.Delta,self.estadoInicial,self.estadosAceptacion)
+        

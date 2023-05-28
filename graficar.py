@@ -161,3 +161,78 @@ def graficosAFN(alfabeto,estados,transicion,estadoInicial,estadosAceptados):
 
     # nx.draw(G,with_labels=True)
     plt.show()
+
+
+def graficosAFNLambda(alfabeto,estados,transicion,estadoInicial,estadosAceptados):
+    G = nx.DiGraph()
+    print(transicion)
+    print(estadosAceptados)
+    simbolosUsadosEnOrden = []
+    simbolosSelfLoopsEnOrden = []
+    selfLoops = []
+    nuevaTransicion = {}
+    G.add_node(estadoInicial)
+    G.add_nodes_from(estados)
+    for i in transicion:
+        source, rest = i.split(':')
+        input_symbol, destinations = rest.split('>')
+        destinations = destinations.split(';')
+        print(f"Current state: {source}, Input symbol: {input_symbol}, Next states: {destinations}")
+        nuevaTransicion[(source, input_symbol)] = destinations
+
+    for estado,conectados in nuevaTransicion.items():
+        print(estado,end=' ')
+        print(conectados)
+        for estado_conectado in conectados:
+            G.add_edge(estado[0],estado_conectado)
+            simbolosUsadosEnOrden.append(estado[1])
+            if estado[0] == estado_conectado:
+                selfLoops.append(estado_conectado)
+                simbolosSelfLoopsEnOrden.append(estado[1])
+
+
+    pos = nx.spring_layout(G)
+    # Draw the graph according to node positions
+    # Create edge labels
+
+    labels = {e: y for e,y in zip(G.edges,simbolosUsadosEnOrden)}
+    # print(labels) 
+    # Draw edge labels according to node positions
+    colors = []
+    for node in G.nodes:
+        if node in estadosAceptados:
+            colors.append('r')
+            continue
+        colors.append('b')
+    #annotar en self loops 
+    
+    
+    # pos[estadoInicial[0]] = (-1, 0.01)
+
+    
+    # Calculate the position for the label
+    # Add the label using annotate
+    nx.draw(G, pos,with_labels=True,node_color=colors)
+    # nx.draw(G, with_labels=True, node_color=colors)
+    nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
+    flechaEstadoInicial = ((pos[estadoInicial][0]-0.15,pos[estadoInicial][1]),(pos[estadoInicial][0]-0.01,pos[estadoInicial][1]))
+    
+    plt.annotate('',xy=(flechaEstadoInicial[1]), xycoords='data',
+            xytext=(flechaEstadoInicial[0]), textcoords='data',
+            arrowprops=dict(arrowstyle="->",
+                            connectionstyle="arc3"),)
+    bandera = False
+    for i in range(len(selfLoops)):
+        if bandera==True:
+            bandera=False
+            continue
+        if i+1<len(selfLoops) and selfLoops[i]==selfLoops[i+1]:
+            label_pos = (pos[selfLoops[i]][0],pos[selfLoops[i]][1]+0.08)
+            plt.annotate('a,b', xy=(label_pos), xytext=label_pos,)
+            bandera=True
+            continue
+        label_pos = (pos[selfLoops[i]][0],pos[selfLoops[i]][1]+0.08)
+        plt.annotate(simbolosSelfLoopsEnOrden[i], xy=(label_pos), xytext=label_pos,)
+
+    # nx.draw(G,with_labels=True)
+    plt.show()

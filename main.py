@@ -1,12 +1,11 @@
 from Punto_A.alfabeto import alfabeto_class
 from Punto_B.AFD import AFD_class #estos son paquetes, son la union de modulos
 from Punto_C.AFN import AFN
-# from Punto_D.AFNLambda import AFNLambda
+from Punto_D.AFNLambda import AFNLambda
 from Punto_E.procesamiento_automatas import ProcesamientoCadenaAFN,ProcesamientoCadenaAFD
 from Punto_F.pruebas import prueba
 from Punto_G.aleatorios import claseValidacion
 
-# Automata = AFNLambda("PruebaITC.txt")
 # AFNConvertido = Automata.AFN_LambdaToAFN()
 # # AFNLambda()
 # from prueba.ayuda import final #asi se maneja como un modulo, y modulos dentro de ese mismo modulo, se cachea para mayor velocidad
@@ -184,4 +183,8 @@ procesamiento.procesar(afd1)
 # Imprimir los resultados
 procesamiento.imprimirResultados()
 
-afn.graficar()
+# afn.graficar()
+
+
+Automata = AFNLambda("PruebaITC.txt")
+Automata.graficar()
