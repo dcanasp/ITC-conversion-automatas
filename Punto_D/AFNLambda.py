@@ -1,5 +1,5 @@
 from Punto_C.AFN import AFN
-
+from graficar import graficosAFNLambda
 class AFNLambda:
     def obtenerAlfabeto(alfabeto):
         letras=[]
@@ -25,8 +25,8 @@ class AFNLambda:
         return letras
 
     def hallarEstadosInaccesibles(self):
-        estados=Automata.estados
-        delta=Automata.Delta
+        estados=self.estados
+        delta=self.Delta
         for estado in estados:
             i=0
             encontrado=False
@@ -37,12 +37,12 @@ class AFNLambda:
                     break
                 i+=1
             if encontrado==False:
-                Automata.estadosInaccesibles.append(estado)
-        return Automata.estadosInaccesibles
+                self.estadosInaccesibles.append(estado)
+        return self.estadosInaccesibles
     
     def __init__(self, alfabeto=None, estados=None, estadoInicial=None, estadosAceptacion=None, Delta=None):
         if ".nfe" in alfabeto or ".NFe" in alfabeto or ".NFE" in alfabeto:
-            with open(alfabeto, 'r') as file:
+            with open('./Punto_D/'+alfabeto, 'r') as file:
                 contenido = file.read()
                 partes = contenido.split('#')
             i=0
@@ -194,7 +194,7 @@ class AFNLambda:
         cadena = cadena
         i=0
         while i < len(cadena):
-            if cadena[i] not in Automata.alfabeto:
+            if cadena[i] not in self.alfabeto:
                 print("La cadena no es valida")
                 return False
             i+=1
@@ -239,9 +239,9 @@ class AFNLambda:
     def exportar(self,nombre_archivo):
         nombre_archivo_con_extension = nombre_archivo + ".nfe"
         with open(nombre_archivo_con_extension, 'w') as archivo:
-            archivo.write(Automata.imprimirAFNLSimplificado())
+            archivo.write(self.imprimirAFNLSimplificado())
             archivo.write("#unreachable\n")
-            for estado in Automata.estadosInaccesibles:
+            for estado in self.estadosInaccesibles:
                 archivo.write(estado + "\n")
     
     def procesarCadena(self,cadena):
@@ -528,7 +528,6 @@ class AFNLambda:
         print(nuevoAFN)
         return nuevoAFN
 
-    #def AFN_LambdaToAFD(self):
-        #AFNConvertido=self.AFN_LambdaToAFN()
-        #AFDConvertido=AFNConvertido.AFNtoAFD()
-        #return AFDConvertido
+    def graficar(self):
+        return graficosAFNLambda(self.alfabeto,self.estados,self.Delta,self.estadoInicial,self.estadosAceptacion)
+        
