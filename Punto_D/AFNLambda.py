@@ -1,3 +1,4 @@
+from Punto_B.AFD import AFD
 from Punto_C.AFN import AFN
 from graficar import graficosAFNLambda
 class AFNLambda:
@@ -41,7 +42,7 @@ class AFNLambda:
         return self.estadosInaccesibles
     
     def __init__(self, alfabeto=None, estados=None, estadoInicial=None, estadosAceptacion=None, Delta=None):
-        if ".txt" in alfabeto:
+        if ".nfe" in alfabeto or ".NFe" in alfabeto or ".NFE" in alfabeto:
             with open('./Punto_D/'+alfabeto, 'r') as file:
                 contenido = file.read()
                 partes = contenido.split('#')
@@ -461,11 +462,9 @@ class AFNLambda:
         estadosNuevos=[]
         estados=self.estados
         for transicion in listaTransiciones:
-            inicio=self.leer_hasta_subcadena(":",transicion)
             medio=self.leer_desde_subcadena(":",transicion)
             medio=self.leer_hasta_subcadena(">",medio)
             final=self.leer_desde_subcadena(">",transicion)
-            transiciones=final.split(";")
             for estado in estados:
                 if estado in final:
                     estadosNuevos.append(estado)
@@ -486,8 +485,21 @@ class AFNLambda:
         estadosAceptacion.sort()
         return estadosAceptacion
     
+    def convertirListaADiccionario(self,listaTransiciones):
+        transiciones=listaTransiciones
+        diccionario = {}
+        for transicion in transiciones:
+            partes = transicion.split(':')
+            estado_actual = partes[0].strip()
+            simbolo = partes[1].split('>')[0].strip()
+            estados_siguientes = partes[1].split('>')[1].strip()
+            if (estado_actual, simbolo) in diccionario:
+                diccionario[(estado_actual, simbolo)].append(estados_siguientes)
+            else:
+                diccionario[(estado_actual, simbolo)] = [estados_siguientes]
+        return diccionario
+
     def AFN_LambdaToAFN(self):
-        nuevoAFN=AFN()
         estadoInicial=self.estadoInicial
         estados=self.estados
         lambdaClausuraInicial=self.calcularLambdaClausura(estadoInicial)
@@ -507,15 +519,29 @@ class AFNLambda:
                                 transicionesFinales.append(estado+":"+simbolo+">"+transicion)
         transicionesFinales=list(set(transicionesFinales))
         transicionesFinales.sort()
+        transiciones=self.convertirListaADiccionario(transicionesFinales)
         estadosFinales=self.actualizarEstados(transicionesFinales)
-        nuevoAFN.estados=estadosFinales
-        nuevoAFN.estadoInicial=estadoInicial
-        nuevoAFN.estadosAceptacion=self.actualizarAceptacion(self.estados)
-        nuevoAFN.alfabeto=self.alfabeto
-        nuevoAFN.tablaTransiciones.fromkeys(transicionesFinales)
-
+        estadosFinales.sort()
+        estadosAceptacion=self.actualizarAceptacion(estadosFinales)
+        nuevoAFN=AFN(self.alfabeto,estadosFinales,estadoInicial,estadosAceptacion,transiciones)
         return nuevoAFN
 
+    def AFN_LambdaToAFD(self):
+        nuevoAFD=self.AFN_LambdaToAFN().AFNtoAFD()
+        return nuevoAFD
+    
+    def procesarCadenaConversion(cadena):
+        AFD = AFNLambda.AFN_LambdaToAFD()
+        return AFD.procesarCadena(cadena)
+    
+    def procesarCadenaConDetallesConversion(cadena):
+        AFD = AFNLambda.AFN_LambdaToAFD()
+        return AFD.procesarCadenaConDetalles(cadena)
+    
+    def procesarListaCadenasConversion(listaCadenas, nombreArchivo, imprimirPantalla):
+        AFD = AFNLambda.AFN_LambdaToAFD()
+        AFD.procesarListaCadenas(listaCadenas, nombreArchivo, imprimirPantalla)
+    
     def graficar(self):
         return graficosAFNLambda(self.alfabeto,self.estados,self.Delta,self.estadoInicial,self.estadosAceptacion)
         
