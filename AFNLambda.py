@@ -1,6 +1,5 @@
 from Punto_C.AFN import AFN
 
-print(AFN)
 class AFNLambda:
     def obtenerAlfabeto(alfabeto):
         letras=[]
@@ -42,7 +41,7 @@ class AFNLambda:
         return Automata.estadosInaccesibles
     
     def __init__(self, alfabeto=None, estados=None, estadoInicial=None, estadosAceptacion=None, Delta=None):
-        if ".txt" in alfabeto:
+        if ".nfe" in alfabeto or ".NFe" in alfabeto or ".NFE" in alfabeto:
             with open(alfabeto, 'r') as file:
                 contenido = file.read()
                 partes = contenido.split('#')
@@ -487,8 +486,21 @@ class AFNLambda:
         estadosAceptacion.sort()
         return estadosAceptacion
     
+    def convertirListaADiccionario(self,listaTransiciones):
+        transiciones=listaTransiciones
+        diccionario = {}
+        for transicion in transiciones:
+            partes = transicion.split(':')
+            estado_actual = partes[0].strip()
+            simbolo = partes[1].split('>')[0].strip()
+            estados_siguientes = partes[1].split('>')[1].strip()
+            if (estado_actual, simbolo) in diccionario:
+                diccionario[(estado_actual, simbolo)].append(estados_siguientes)
+            else:
+                diccionario[(estado_actual, simbolo)] = [estados_siguientes]
+        return diccionario
+
     def AFN_LambdaToAFN(self):
-        nuevoAFN=AFN()
         estadoInicial=self.estadoInicial
         estados=self.estados
         lambdaClausuraInicial=self.calcularLambdaClausura(estadoInicial)
@@ -508,14 +520,22 @@ class AFNLambda:
                                 transicionesFinales.append(estado+":"+simbolo+">"+transicion)
         transicionesFinales=list(set(transicionesFinales))
         transicionesFinales.sort()
+        transiciones=self.convertirListaADiccionario(transicionesFinales)
         estadosFinales=self.actualizarEstados(transicionesFinales)
-        nuevoAFN.estados=estadosFinales
-        nuevoAFN.estadoInicial=estadoInicial
-        nuevoAFN.estadosAceptacion=self.actualizarAceptacion(self.estados)
-        nuevoAFN.alfabeto=self.alfabeto
-        nuevoAFN.tablaTransiciones.fromkeys(transicionesFinales)
-
+        estadosFinales.sort()
+        estadosAceptacion=self.actualizarAceptacion(estadosFinales)
+        nuevoAFN=AFN(Automata.alfabeto,estadosFinales,estadoInicial,estadosAceptacion,transiciones)
+        print(nuevoAFN)
         return nuevoAFN
 
-Automata = AFNLambda("PruebaITC.txt")
+    #def AFN_LambdaToAFD(self):
+        #AFNConvertido=self.AFN_LambdaToAFN()
+        #AFDConvertido=AFNConvertido.AFNtoAFD()
+        #return AFDConvertido
+
+    
+
+Automata = AFNLambda("PruebaITC.nfe")
+print(Automata)
 AFNConvertido = Automata.AFN_LambdaToAFN()
+AFN.imprimirAFNSimplificado(AFNConvertido)
