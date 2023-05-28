@@ -99,12 +99,10 @@ def graficosAFD(alfabeto,estados,transicion,estadoInicial,estadosAceptados):
 def graficosAFN(alfabeto,estados,transicion,estadoInicial,estadosAceptados):
     G = nx.DiGraph()
     print(transicion)
-    print(estadoInicial)
+    print(estados)
     simbolosUsadosEnOrden = []
     simbolosSelfLoopsEnOrden = []
-    estados_graficados = [] 
     selfLoops = []
-    estados_graficados.append(estadoInicial[0])
     G.add_node(estadoInicial)
     G.add_nodes_from(estados)
     for estado,conectados in transicion.items():
