@@ -1,5 +1,7 @@
 from Punto_B.AFD import AFD_class
 from collections import defaultdict
+from graficar import graficosAFN
+
 class AFN():
     #1
     def __init__(self, alfabeto, estados, estadoInicial, estadosAceptacion, delta):
@@ -356,6 +358,9 @@ class AFN():
         estados.sort()
         return ''.join(estados)
 
+    def graficar(self):
+        return graficosAFN(self.alfabeto,self.estados,self.transicion,self.estadoInicial,self.estadosAceptados)
+        
     #2
 def constructor(nombreArchivo):
         try:

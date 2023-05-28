@@ -1,4 +1,4 @@
-from graficar import graficos
+from graficar import graficosAFD
 
 class AFD_class:
     def __init__(self,alfabeto,estados,estadoInicial,estadosAceptados,delta):
@@ -239,7 +239,7 @@ class AFD_class:
                 self.transicion[estado].pop(simbolo)
 
     def graficar(self):
-        graficos(self.alfabeto,self.estados,self.transicion,self.estadoInicial,self.estadosAceptados,self.estadosLimbo)
+        return graficosAFD(self.alfabeto,self.estados,self.transicion,self.estadoInicial,self.estadosAceptados)
 
 
 def constructor(nombreArchivo):
