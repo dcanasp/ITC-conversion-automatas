@@ -1,3 +1,4 @@
+from Punto_B.AFD import AFD
 from Punto_C.AFN import AFN
 from graficar import graficosAFNLambda
 class AFNLambda:
@@ -190,7 +191,7 @@ class AFNLambda:
         with open(nombre_archivo_con_extension, 'w') as archivo:
             archivo.write(contenido)
 
-    def comprobarCadena(cadena):
+    def comprobarCadena(self,cadena):
         cadena = cadena
         i=0
         while i < len(cadena):
@@ -461,11 +462,9 @@ class AFNLambda:
         estadosNuevos=[]
         estados=self.estados
         for transicion in listaTransiciones:
-            inicio=self.leer_hasta_subcadena(":",transicion)
             medio=self.leer_desde_subcadena(":",transicion)
             medio=self.leer_hasta_subcadena(">",medio)
             final=self.leer_desde_subcadena(">",transicion)
-            transiciones=final.split(";")
             for estado in estados:
                 if estado in final:
                     estadosNuevos.append(estado)
@@ -524,10 +523,25 @@ class AFNLambda:
         estadosFinales=self.actualizarEstados(transicionesFinales)
         estadosFinales.sort()
         estadosAceptacion=self.actualizarAceptacion(estadosFinales)
-        nuevoAFN=AFN(Automata.alfabeto,estadosFinales,estadoInicial,estadosAceptacion,transiciones)
-        print(nuevoAFN)
+        nuevoAFN=AFN(self.alfabeto,estadosFinales,estadoInicial,estadosAceptacion,transiciones)
         return nuevoAFN
 
+    def AFN_LambdaToAFD(self):
+        nuevoAFD=self.AFN_LambdaToAFN().AFNtoAFD()
+        return nuevoAFD
+    
+    def procesarCadenaConversion(cadena):
+        AFD = AFNLambda.AFN_LambdaToAFD()
+        return AFD.procesarCadena(cadena)
+    
+    def procesarCadenaConDetallesConversion(cadena):
+        AFD = AFNLambda.AFN_LambdaToAFD()
+        return AFD.procesarCadenaConDetalles(cadena)
+    
+    def procesarListaCadenasConversion(listaCadenas, nombreArchivo, imprimirPantalla):
+        AFD = AFNLambda.AFN_LambdaToAFD()
+        AFD.procesarListaCadenas(listaCadenas, nombreArchivo, imprimirPantalla)
+    
     def graficar(self):
         return graficosAFNLambda(self.alfabeto,self.estados,self.Delta,self.estadoInicial,self.estadosAceptacion)
         
