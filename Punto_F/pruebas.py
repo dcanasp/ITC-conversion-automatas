@@ -1,5 +1,8 @@
 from Punto_B.AFD import AFD_class
 from Punto_C.AFN import AFN
+from Punto_D.AFNLambda import AFNLambda
+from Punto_E.procesamiento_automatas import ProcesamientoCadenaAFN,ProcesamientoCadenaAFD
+
 class prueba:
     def __init__(self): 
         self.main()
@@ -23,35 +26,53 @@ class prueba:
             'q3':{'a': 'q2', 'b': ''},
         }
 
-        # (self,alfabeto,estados,estadoInicial,estadosAceptados,delta)
+
         afd1 = AFD_class(['a', 'b'], ['q0','q1','q2','q3'], ['q0'], ['q0'], delta)
-        afd2 = AFD_class(['a','b'],['q0','q1','q2'],['q0'],['q0','q1'],delta2)
-        afd3 = AFD_class(['a','b'],['q0','q1','q2','q3'],['q0'],['q2','q3'],delta3)
+
+        # Crear una instancia de la clase ProcesamientoCadenaAFD
+        cadena = "ababa"
+        procesamiento = ProcesamientoCadenaAFD(cadena)
+
+        # Procesar la cadena utilizando el autómata
+        procesamiento.procesar(afd1)
+
+        # Imprimir los resultados
+        procesamiento.imprimirResultados()
+
+        # (self,alfabeto,estados,estadoInicial,estadosAceptados,delta)
+        # afd1 = AFD_class(['a', 'b'], ['q0','q1','q2','q3'], ['q0'], ['q0'], delta)
+        # afd2 = AFD_class(['a','b'],['q0','q1','q2'],['q0'],['q0','q1'],delta2)
+        # afd3 = AFD_class(['a','b'],['q0','q1','q2','q3'],['q0'],['q2','q3'],delta3)
         
         print(afd1.procesarCadenaConDetalles('abbaabaab'))
+        print("grafica AFD")
+        afd1.graficar()
         return
     def probarAFN(self):
-        alfabeto = {'0', '1'}
-        estados = {'q0', 'q1', 'q2', 'q3'}
-        estado_inicial = 'q0'
-        estados_aceptacion = {'q3','q0'}
-        estados_inaccesibles = set()
-        delta = {
-            'q0': {'0': {'q1'}, '1': {'q0', 'q1'}},
-            'q1': {'0': {'q2'}, '1': {'q0'}},
-            'q2': {'0': {'q2'}, '1': {'q3'}},
-            'q3': {'0': {'q3'}, '1': {'q3'}}
-        }
-        # (self,alfabeto,estados,estadoInicial,estadosAceptados,delta)
-        afn1 = AFN(alfabeto,estados, estado_inicial,estados_aceptacion, delta)
-        afn1.procesarCadena
-        print(afn1.procesarCadena('0001'))
+
+        afn_instancia = AFN(['a', 'b'], ['q0', 'q1', 'q2', 'q3'], 'q0', ['q1'], {
+            ('q0', 'a'): ['q0','q1','q3'],
+            ('q0', 'b'): [],
+            ('q1', 'a'): ['q1'],
+            ('q1', 'b'): ['q2'],
+            ('q2', 'a'): [],
+            ('q2', 'b'): ['q1','q2'],
+            ('q3', 'a'): [],
+            ('q3', 'b'): ['q3'],
+        })
+        cadena = "aaaa"  
+        procesamiento = ProcesamientoCadenaAFN(cadena)
+        procesamiento.procesar(afn_instancia) 
+        procesamiento.imprimirResultados()
+        afn_instancia.graficar()
+
         return
     def probarAFNLambda(self):
         return
     def main(self):
-        # self.probarAFD()
+        self.probarAFD()
         self.probarAFN()
+        self.probarAFNLambda()
         return
     def probarAFNtoAFD(self):
         return

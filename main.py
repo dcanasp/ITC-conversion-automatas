@@ -14,22 +14,8 @@ from Punto_G.aleatorios import claseValidacion
 # claseValidacion()
 # AFNLambda()
 # ProcesamientoCadenaAFN()
-# afn_instancia = AFN(['a', 'b'], ['q0', 'q1', 'q2', 'q3'], 'q0', ['q1'], {
-#     ('q0', 'a'): ['q0','q1','q3'],
-#     ('q0', 'b'): [],
-#     ('q1', 'a'): ['q1'],
-#     ('q1', 'b'): ['q2'],
-#     ('q2', 'a'): [],
-#     ('q2', 'b'): ['q1','q2'],
-#     ('q3', 'a'): [],
-#     ('q3', 'b'): ['q3'],
-# })
-# cadena = "aaaa"  
-# procesamiento = ProcesamientoCadenaAFN(cadena)
-# procesamiento.procesar(afn_instancia) 
-# procesamiento.imprimirResultados()
-
-
+# 
+prueba()
 
 '''
 print(afd1.hallarEstadosLimbo())
@@ -164,24 +150,6 @@ procesamiento.procesar(afn)
 # Imprimir los resultados
 procesamiento.imprimirResultados()           
             
-delta = {
-    'q0': {'a': 'q1', 'b': 'q2'},
-    'q1': {'a': '', 'b': 'q2'},
-    'q2': {'a': 'q2', 'b': 'q3'},
-    'q3': {'a':'','b':''}
-}
-
-afd1 = AFD_class(['a', 'b'], ['q0','q1','q2','q3'], ['q0'], ['q0'], delta)
-
-# Crear una instancia de la clase ProcesamientoCadenaAFD
-cadena = "ababa"
-procesamiento = ProcesamientoCadenaAFD(cadena)
-
-# Procesar la cadena utilizando el autómata
-procesamiento.procesar(afd1)
-
-# Imprimir los resultados
-procesamiento.imprimirResultados()
 
 # afn.graficar()
 
