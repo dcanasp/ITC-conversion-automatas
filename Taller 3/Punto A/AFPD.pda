@@ -1,0 +1,16 @@
+#!pda
+#states
+q0
+#initial
+q0
+#accepting
+q0
+#tapeAlphabet
+a-b
+#stackAlphabet
+A-B
+#transitions
+q0:a:$>q0:A
+q0:b:$>q0:B
+q0:a:B>q0:$
+q0:b:A>q0:$
