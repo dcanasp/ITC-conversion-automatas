@@ -178,57 +178,46 @@ class AFD_class:
         archivo.write(self.pasarString())
         return archivo.close()
     
-    def procesarCadena(self, cadena):
-        estado_actual = self.estadoInicial
-        
+    def procesarCadena(self,cadena):
         # Recorrer la cadena y actualizar el estado actual en cada transición
         for simbolo in cadena:
-            # Verificar si el estado actual tiene una transición definida para el símbolo actual
-            if estado_actual in self.transicion and simbolo in self.transicion[estado_actual]:
-                # Obtener el estado siguiente a partir del estado actual y el símbolo actual
-                estado_siguiente = self.transicion[estado_actual][simbolo]
+            # Obtener el estado siguiente a partir del estado actual y el símbolo actual
+            estado_siguiente = self.transicion[self.estadoInicial[0]][simbolo]
 
-                # Actualizar el estado actual
-                estado_actual = estado_siguiente
-            else:
-                # No hay transición definida para el símbolo actual, la cadena es rechazada
+            # Si no hay transición para el símbolo actual, la cadena es rechazada
+            if estado_siguiente is None:
                 return False
+
+            # Actualizar el estado actual
+            estado_actual = estado_siguiente
 
         # Si el estado actual es un estado de aceptación, la cadena es aceptada; de lo contrario, es rechazada
         if estado_actual in self.estadosAceptados:
             return True
         else:
             return False
-
     
-    def procesarCadenaConDetalles(self, cadena):
+    def procesarCadenaConDetalles(self,cadena):
         # Inicializar el estado actual con el estado inicial
-        estado_actual = self.estadoInicial
+        estado_actual = self.estadoInicial[0]
         salida = ''
         i = 0
-        
         # Recorrer la cadena y actualizar el estado actual en cada transición
         for simbolo in cadena:
-            # Verificar si el estado actual tiene una transición definida para el símbolo actual
-            if estado_actual in self.transicion and simbolo in self.transicion[estado_actual]:
-                # Obtener el estado siguiente a partir del estado actual y el símbolo actual
-                estado_siguiente = self.transicion[estado_actual][simbolo]
+            # Obtener el estado siguiente a partir del estado actual y el símbolo actual
+            estado_siguiente = self.transicion[estado_actual][simbolo]
 
-                # Actualizar el estado actual
-                estado_actual = estado_siguiente
+            # Actualizar el estado actual
+            estado_actual = estado_siguiente
 
-                # Imprimir el estado actual después de procesar el símbolo actual
-                salida += f'[{estado_actual},{cadena[i:]}]->'
-                i += 1
-            else:
-                # No hay transición definida para el símbolo actual, la cadena es rechazada
-                return salida + '\tNo Aceptacion'
+            # Imprimir el estado actual después de procesar el símbolo actual
+            salida += f'[{estado_actual},{cadena[i:]}]->'
+            i += 1
 
         if estado_actual in self.estadosAceptados:
-            return salida + '\tAceptacion'
+            return salida+'\tAceptacion'
         else:
-            return salida + '\tNo Aceptacion'
-
+            return salida+'\tNo Aceptacion'
     
     def procesarListaCadenas(self, listaCadenas,nombreArchivo, imprimirPantalla: bool):
         output = ''

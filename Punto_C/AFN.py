@@ -83,6 +83,7 @@ class AFN():
         archivo.write(self.toString())
         return archivo.close()
     
+
     #8
     def procesarCadena(self, cadena):
         # Inicializar el conjunto de estados actuales con el estado inicial
@@ -342,8 +343,6 @@ class AFN():
                 print(f"{estado_antiguo:^20} | {simbolo:^10} | {estado_nuevo:^20}")
         print()
 
-        transicionAdaptada=convertir_notacion(afd.transicion)
-        afd.transicion=transicionAdaptada
         return afd
     #7
     def obtenerTransiciones(self, estados, simbolo):
@@ -358,25 +357,10 @@ class AFN():
     def obtenerEstadoID(self, estados):
         estados.sort()
         return ''.join(estados)
-    #PUNTOS EXTRA
+
     def graficar(self):
         return graficosAFN(self.alfabeto,self.estados,self.transicion,self.estadoInicial,self.estadosAceptados)
-    
-    #12 
-    def procesarCadenaConversion(self,cadena):
-        afd = self.AFNtoAFD()
-        print(afd.procesarCadena(cadena))
-        return(afd.procesarCadena(cadena))
-    #13
-    def procesarCadenaConDetallesConversion(self,cadena):
-        afd = self.AFNtoAFD()
-        print(afd.procesarCadenaConDetalles(cadena))
-        return(afd.procesarCadenaConDetalles(cadena))
-    #14
-    def procesarListaCadenasConversion(self,listaCadenas,nombreArchivo, imprimirPantalla):
-        afd = self.AFNtoAFD()
-        afd.procesarListaCadenas(listaCadenas,nombreArchivo, imprimirPantalla)
-        return(afd.procesarListaCadenas(listaCadenas,nombreArchivo, imprimirPantalla)) 
+        
     #2
 def constructor(nombreArchivo):
         try:
@@ -423,12 +407,3 @@ def constructor(nombreArchivo):
         except(FileNotFoundError):
             print("No se encontró el archivo")
     
-def convertir_notacion(diccionario):
-    nuevo_diccionario = {}
-    
-    for clave, valor in diccionario.items():
-        estado, simbolo = clave
-        if estado not in nuevo_diccionario:
-            nuevo_diccionario[estado] = {}
-        nuevo_diccionario[estado][simbolo] = valor
-    return nuevo_diccionario

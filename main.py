@@ -15,7 +15,7 @@ from Punto_G.aleatorios import claseValidacion
 # AFNLambda()
 # ProcesamientoCadenaAFN()
 # 
-# prueba()
+prueba()
 
 '''
 print(afd1.hallarEstadosLimbo())
@@ -128,55 +128,31 @@ print(afd1.simplificarAFD('abbaab')) #
 # afn_instancia.procesarListaCadenas(listaCadenas, nombreArchivo, imprimirPantalla)
 
 
-estados = ['q10', 'q1', 'q2', 'q3']
+estados = ['q0', 'q1', 'q2', 'q3']
 alfabeto = ['a', 'b']
-estado_inicial = 'q10'
+estado_inicial = 'q0'
 estados_aceptados = ['q3']
 transiciones = {
-    ('q10', 'a'): ['q1','q2','q3'],
-    ('q1', 'a'): ['q1','q0'],
-    ('q1', 'b'): ['q2','q0'],
-    ('q2', 'b'): ['q3','q1'],
+    ('q0', 'a'): ['q1'],
+    ('q1', 'a'): ['q1'],
+    ('q1', 'b'): ['q2'],
+    ('q2', 'b'): ['q3']
 }
 afn = AFN(alfabeto,estados, estado_inicial, estados_aceptados, transiciones)
-print("TRANSICIONES!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" )
-print(afn.transicion)
-afd = afn.AFNtoAFD()
-print("TRANSICIONES!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!2222222222222222222222" )
-print(afd.transicion)
-afn.procesarCadenaConDetallesConversion("abababa")
-# # Crear una instancia de la clase ProcesamientoCadenaAFN
-# cadena = "aab"
-# print("PROCESAMINETO")
-# procesamiento = ProcesamientoCadenaAFN(cadena)
 
-# # Procesar la cadena utilizando el autómata
-# print("PROCESAMINETO 2")
-# procesamiento.procesar(afn)
+# Crear una instancia de la clase ProcesamientoCadenaAFN
+cadena = "aab"
+procesamiento = ProcesamientoCadenaAFN(cadena)
 
-# # Imprimir los resultados
-# print("IMPRIMIR RESULTADOS")
-# procesamiento.imprimirResultados()           
-# afd=afn.AFNtoAFD()
+# Procesar la cadena utilizando el autómata
+procesamiento.procesar(afn)
 
-# # print(afd.estados)
-# # print(afd.alfabeto)
-# print("ESTADO INICIAL")
-# print(afd.estadoInicial)
-# # print(afd.estadosAceptados)
+# Imprimir los resultados
+procesamiento.imprimirResultados()           
+            
 
-# # afd.pasarString()
-# print(afd.procesarCadena("baa"))
-# print(afd.procesarCadenaConDetalles("baa"))
-print("AFN CONVERSIÓN CONVERSIÓN LISTA CADENAS"  )
-lista_cadenas = ["aab", "abb", "baa"]
-nombre_archivo = "salida"
-imprimir_pantalla = True
-
-afn.procesarListaCadenas(lista_cadenas, nombre_archivo, imprimir_pantalla)
-
-# # afn.graficar()
+# afn.graficar()
 
 
-# # Automata = AFNLambda("PruebaITC.txt")
-# # Automata.graficar()
+Automata = AFNLambda("PruebaITC.txt")
+Automata.graficar()

@@ -1,0 +1,19 @@
+Cadena: abab
+Procedimiento: 
+(q0,abab,$) ->
+(q0,bab,A) ->
+(q0,ab,$) ->
+(q0,b,A)
+Cadena aceptada
+
+Cadena: aabb
+Procedimiento: 
+(q0,aabb,$) ->
+
+Cadena no aceptada
+
+Cadena: abba
+Procedimiento: 
+
+Cadena no aceptada
+

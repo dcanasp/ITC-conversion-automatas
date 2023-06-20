@@ -1,4 +1,4 @@
-from Punto_B.AFD import AFD_class
+from Punto_B.AFD import AFD
 from Punto_C.AFN import AFN
 from graficar import graficosAFNLambda
 class AFNLambda:
