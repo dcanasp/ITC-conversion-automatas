@@ -11,46 +11,48 @@ from Punto_G.aleatorios import claseValidacion
 #INICIO DE PRESENTACIÓN
 
 #AFD
-alfabeto = ['a', 'b']
-estados = ['q0', 'q1']
-estado_inicial = ['q0']
-estados_aceptados = ['q0']
-transiciones = {'q0': {'a': 'q1', 'b': 'q0'}, 'q1': {'a': 'q0', 'b': 'q1'}}
+# alfabeto = ['a', 'b']
+# estados = ['q0', 'q1']
+# estado_inicial = ['q0']
+# estados_aceptados = ['q0']
+# transiciones = {'q0': {'a': 'q1', 'b': 'q0'}, 'q1': {'a': 'q0', 'b': 'q1'}}
 
-afd = AFD_class(alfabeto, estados, estado_inicial, estados_aceptados, transiciones)
+# afd = AFD_class(alfabeto, estados, estado_inicial, estados_aceptados, transiciones)
 
-afd2 = constructor("afd2")
-print("pasar string")
-afd2.pasarString()
-print("verificar completitud")
-afd.verificarCorregirCompletitudAFD()
-print("hallar estados limbo")
-afd.hallarEstadosLimbo()
-print("to   string")
-afd.pasarString()
-print("afd simplificado")
-afd.imprimirAFDSimplificado()
-print("exportar")
-afd.exportar("afd")
-print("procesar cadena")
-print(afd.procesarCadena("abbbabaaabbaaa"))
-print("procesar cadena con detalles")
-print(afd.procesarCadenaConDetalles("abbbabaaabbaaa"))
-print("COMPLEMENTO")
-complemento = hallarComplemento(afd).pasarString()
-print("Producto cartesiano Y")
-hallarProductoCartesianoY(afd,afd2).pasarString()
-print("Producto cartesiano O")
-hallarProductoCartesianoO(afd,afd2).pasarString()
-print("producto cartesiano diferencia")
-hallarProductoCartesianoDiferencia(afd,afd2).pasarString()
-print("producto cartesiano diferencia simetrica")
-hallarProductoCartesianoDiferenciaSimetrica(afd,afd2).pasarString()
-print("simplificar AFD")
-simplificarAFD(afd).pasarString()
+# afd2 = constructor("afd2")
+# print("pasar string")
+# afd2.pasarString()
+# print("verificar completitud")
+# afd.verificarCorregirCompletitudAFD()
+# print("hallar estados limbo")
+# afd.hallarEstadosLimbo()
+# print("to   string")
+# afd.pasarString()
+# print("afd simplificado")
+# afd.imprimirAFDSimplificado()
+# print("exportar")
+# afd.exportar("afd")
+# print("procesar cadena")
+# print(afd.procesarCadena("abbbabaaabbaaa"))
+# print("procesar cadena con detalles")
+# print(afd.procesarCadenaConDetalles("abbbabaaabbaaa"))
+# print("procesar lista cadena con detalles")
+# afd.procesarListaCadenas(["abbbabaaabbaaa","abbbabaaa","abbbbaaa"],"resultadoslistaafd",imprimirPantalla=True)
+# print("COMPLEMENTO")
+# complemento = hallarComplemento(afd).pasarString()
+# print("Producto cartesiano Y")
+# hallarProductoCartesianoY(afd,afd2).pasarString()
+# print("Producto cartesiano O")
+# hallarProductoCartesianoO(afd,afd2).pasarString()
+# print("producto cartesiano diferencia")
+# hallarProductoCartesianoDiferencia(afd,afd2).pasarString()
+# print("producto cartesiano diferencia simetrica")
+# hallarProductoCartesianoDiferenciaSimetrica(afd,afd2).pasarString()
+# print("simplificar AFD")
+# simplificarAFD(afd).pasarString()
 
-print("graficar")
-afd.graficar()
+# print("graficar")
+# afd.graficar()
 
 ##################################################################################################################################################################
 #AFN
@@ -97,3 +99,4 @@ afd.graficar()
 #AFNLAMBDA
 
 ##################################################################################################################################################################
+
