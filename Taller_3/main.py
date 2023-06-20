@@ -1,7 +1,8 @@
 from Punto_A.AFPD import AFPD
 from Punto_B.AFPN import AFPN
-from pruebas import AFPN
 from Punto_D.MT import MT
+
+
 
 '''
 AFPD
@@ -21,7 +22,7 @@ AFPD
 '''
 AFPN
 '''
-archivo=AFPN("AFPN.pda")
+archivo=AFPN("Punto_B/AFPN.pda")
 estados = ['q0','q1','q2','q3']
 estados_aceptacion = ['q0','q3']
 estado_inicial = 'q0'
@@ -35,10 +36,10 @@ Delta = {
     ('q2','$','$','$'): ['q3'],
 }
 afpn=AFPN(estados,estado_inicial,estados_aceptacion,sigma,Gamma,Delta)
-# print(afpn)
+print(afpn)
 print(afpn.procesarCadena('ab'))
 print(afpn.procesarCadenaConDetalles('aba'))
-# print(afpn.modificarPila(["a","b","c"],"pop","a"))
+# print(afpn.modificarPila(["a","b","c"],"$","a"))
 #print(afpn.obtenerTransiciones("q0","a","A"))
 #print(afpn.leerLetra("bb"))
 #print(afpn.procesarCadenaConDetalles("abab"))
