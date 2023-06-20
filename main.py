@@ -1,99 +1,61 @@
 from Punto_A.alfabeto import alfabeto_class
-from Punto_B.AFD import AFD_class #estos son paquetes, son la union de modulos
+from Punto_B.AFD import AFD_class,constructor,hallarComplemento,hallarProductoCartesianoY,hallarProductoCartesianoO,hallarProductoCartesianoDiferencia,hallarProductoCartesianoDiferenciaSimetrica,simplificarAFD #estos son paquetes, son la union de modulos
 from Punto_C.AFN import AFN
 from Punto_D.AFNLambda import AFNLambda
 from Punto_E.procesamiento_automatas import ProcesamientoCadenaAFN,ProcesamientoCadenaAFD
 from Punto_F.pruebas import prueba
 from Punto_G.aleatorios import claseValidacion
 
-# AFNConvertido = Automata.AFN_LambdaToAFN()
-# # AFNLambda()
-# from prueba.ayuda import final #asi se maneja como un modulo, y modulos dentro de ese mismo modulo, se cachea para mayor velocidad
 
-# listaAFN = prueba()
-# claseValidacion()
-# AFNLambda()
-# ProcesamientoCadenaAFN()
-# 
-# prueba()
+##################################################################################################################################################################
+#INICIO DE PRESENTACIÓN
 
-'''
-print(afd1.hallarEstadosLimbo())
-print(afd1.imprimirAFDSimplificado()) #
-print(afd1.hallarEstadosInaccesibles()) 
-print(afd1.eliminarEstadosInaccesibles())
-print(afd1.pasarString())
-print(afd1.procesarCadena('abbaab'))
-print(afd1.procesarCadenaConDetalles('abbaab'))
-print(afd1.procesarListaCadenas('abbaab','prueba','no')) #
-print(afd1.simplificarAFD('abbaab')) #
-'''
+#AFD
+alfabeto = ['a', 'b']
+estados = ['q0', 'q1']
+estado_inicial = ['q0']
+estados_aceptados = ['q0']
+transiciones = {'q0': {'a': 'q1', 'b': 'q0'}, 'q1': {'a': 'q0', 'b': 'q1'}}
 
+afd = AFD_class(alfabeto, estados, estado_inicial, estados_aceptados, transiciones)
 
-# Ejemplo de uso
-# afn_instancia = AFN(['a', 'b'], ['q0', 'q1', 'q2', 'q3'], 'q0', ['q0'], {
-#     ('q0', 'a'): [],
-#     ('q0', 'b'): ['q1','q2'],
-#     ('q1', 'a'): ['q0'],
-#     ('q1', 'b'): [],
-#     ('q2', 'a'): ['q3'],
-#     ('q2', 'b'): [],
-#     ('q3', 'a'): [],
-#     ('q3', 'b'): ['q0'],
-# })
+afd2 = constructor("afd2")
+print("pasar string")
+afd2.pasarString()
+print("verificar completitud")
+afd.verificarCorregirCompletitudAFD()
+print("hallar estados limbo")
+afd.hallarEstadosLimbo()
+print("to   string")
+afd.pasarString()
+print("afd simplificado")
+afd.imprimirAFDSimplificado()
+print("exportar")
+afd.exportar("afd")
+print("procesar cadena")
+print(afd.procesarCadena("abbbabaaabbaaa"))
+print("procesar cadena con detalles")
+print(afd.procesarCadenaConDetalles("abbbabaaabbaaa"))
+print("COMPLEMENTO")
+complemento = hallarComplemento(afd).pasarString()
+print("Producto cartesiano Y")
+hallarProductoCartesianoY(afd,afd2).pasarString()
+print("Producto cartesiano O")
+hallarProductoCartesianoO(afd,afd2).pasarString()
+print("producto cartesiano diferencia")
+hallarProductoCartesianoDiferencia(afd,afd2).pasarString()
+print("producto cartesiano diferencia simetrica")
+hallarProductoCartesianoDiferenciaSimetrica(afd,afd2).pasarString()
+print("simplificar AFD")
+simplificarAFD(afd).pasarString()
 
-# print(afn_instancia.toString())
-# afd_instancia = afn_instancia.AFNtoAFD()
+print("graficar")
+afd.graficar()
 
-
-# print("alfabeto")
-# print(afd_instancia.alfabeto)
-# print(afd_instancia.estados)
-# print(afd_instancia.estadoInicial)
-# print(afd_instancia.estadosAceptados)
-# print(afd_instancia.transicion)
-
-# afn = AFN(['a', 'b','c'], ['q0', 'q1', 'q2'], 'q0', ['q0'], {
-#     ('q0', 'a'): [],
-#     ('q0', 'b'): ['q1', 'q2'],
-#     ('q1', 'a'): ['q0'],
-#     ('q1', 'b'): [],
-#     ('q2', 'a'): ['q3'],
-#     ('q2', 'b'): [],
-#     ('q3', 'a'): [],
-#     ('q3', 'b'): ['q0'],
-#     ('q3','c'): ['q1']
-# })
+##################################################################################################################################################################
+#AFN
 
 
-# print("AFN AFD")
-# afd = afn.AFNtoAFD()
-# afd.pasarStringAFNtoAFD()
-
-
-# listaCadenas = ["abababa", "aaaab", "aabbcc","a"]
-
-# # Especificar el nombre del archivo de resultados
-# nombreArchivo = "resultados.txt"
-
-# # Indicar si se imprimirán los resultados en pantalla
-# imprimirPantalla = True
-
-# # Procesar la lista de cadenas con detalles y guardar los resultados en el archivo
-# afn.procesarListaCadenas(listaCadenas, nombreArchivo, imprimirPantalla)
-# print("###################################")
-
-# # delta = {
-# #     'q0': {'a': 'q1', 'b': 'q2'},
-# #     'q1': {'a': '', 'b': 'q2'},
-# #     'q2': {'a': 'q2', 'b': 'q3'},
-# #     'q3': {'a':'','b':''}
-# # }
-
-# # afd1 = AFD_class(['a', 'b'], ['q0','q1','q2','q3'], ['q0'], ['q0'], delta)
-# # # afd.pasarString()
-# # afd1.pasarString()##instancia nativa de afd
-# # afd.pasarStringAFNtoAFD() #instancia de afd a partir de una de afn
 # afn_instancia = AFN(['a', 'b'], ['q0', 'q1', 'q2', 'q3'], 'q0', ['q1'], {
 #     ('q0', 'a'): ['q0','q1','q3'],
 #     ('q0', 'b'): [],
@@ -104,79 +66,34 @@ print(afd1.simplificarAFD('abbaab')) #
 #     ('q3', 'a'): [],
 #     ('q3', 'b'): ['q3'],
 # })
-# # afn_instancia.toString()
-# # afn_instancia.imprimirAFNSimplificado()
-# # afn_instancia.exportar("prueba")
-# # afn_instancia.procesarCadena("aaaa")
-# # afn_instancia.procesarCadenaConDetalles("aaa")
-# # nuevainstancia = constructor("prueba")
-# # nuevainstancia.computarTodosLosProcesamientos("aaa","prueba")
-
+# print("to string")
+# afn_instancia.toString()
+# print("imprimir afn simplificado")
+# afn_instancia.imprimirAFNSimplificado()
+# print("exportar")
+# afn_instancia.exportar("pruebaAFNEXPORTADO")
+# print("procesar cadena")
+# afn_instancia.procesarCadena("aaaa")
+# print("procesar cadena con detalles")
+# afn_instancia.procesarCadenaConDetalles("aaa")
+# print("computar")
+# afn_instancia.computarTodosLosProcesamientos("aaa","pruebaCOMPUTAR")
+# print("procesar lista cadenas")
 # listaCadenas = ["ab", "abc", "abcd"]
 # afn_instancia.procesarListaCadenas(listaCadenas, "resultados.txt", imprimirPantalla=True)
+# print("AFNTOAFD")
+# afd_instancia = afn_instancia.AFNtoAFD()
+# print("procesar cadena conversion")
+# afn_instancia.procesarCadenaConversion("aaaa")
+# print("procesar cadena con detalles conversion")
+# afn_instancia.procesarCadenaConDetallesConversion("aaaa")
+# print("procesar lista cadenas conversion")
+# afn_instancia.procesarListaCadenasConversion(listaCadenas,"resultadosCONVERSION.txt",imprimirPantalla=True)
 
+# print("graficar")
+# afn_instancia.graficar()
 
-# listaCadenas = ["abababa", "aaaab", "aabbcc","a"]
+##################################################################################################################################################################
+#AFNLAMBDA
 
-# # Especificar el nombre del archivo de resultados
-# nombreArchivo = "resultados.txt"
-
-# # Indicar si se imprimirán los resultados en pantalla
-# imprimirPantalla = True
-
-# # Procesar la lista de cadenas con detalles y guardar los resultados en el archivo
-# afn_instancia.procesarListaCadenas(listaCadenas, nombreArchivo, imprimirPantalla)
-
-
-estados = ['q10', 'q1', 'q2', 'q3']
-alfabeto = ['a', 'b']
-estado_inicial = 'q10'
-estados_aceptados = ['q3']
-transiciones = {
-    ('q10', 'a'): ['q1','q2','q3'],
-    ('q1', 'a'): ['q1','q0'],
-    ('q1', 'b'): ['q2','q0'],
-    ('q2', 'b'): ['q3','q1'],
-}
-afn = AFN(alfabeto,estados, estado_inicial, estados_aceptados, transiciones)
-print("TRANSICIONES!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" )
-print(afn.transicion)
-afd = afn.AFNtoAFD()
-print("TRANSICIONES!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!2222222222222222222222" )
-print(afd.transicion)
-afn.procesarCadenaConDetallesConversion("abababa")
-# # Crear una instancia de la clase ProcesamientoCadenaAFN
-# cadena = "aab"
-# print("PROCESAMINETO")
-# procesamiento = ProcesamientoCadenaAFN(cadena)
-
-# # Procesar la cadena utilizando el autómata
-# print("PROCESAMINETO 2")
-# procesamiento.procesar(afn)
-
-# # Imprimir los resultados
-# print("IMPRIMIR RESULTADOS")
-# procesamiento.imprimirResultados()           
-# afd=afn.AFNtoAFD()
-
-# # print(afd.estados)
-# # print(afd.alfabeto)
-# print("ESTADO INICIAL")
-# print(afd.estadoInicial)
-# # print(afd.estadosAceptados)
-
-# # afd.pasarString()
-# print(afd.procesarCadena("baa"))
-# print(afd.procesarCadenaConDetalles("baa"))
-print("AFN CONVERSIÓN CONVERSIÓN LISTA CADENAS"  )
-lista_cadenas = ["aab", "abb", "baa"]
-nombre_archivo = "salida"
-imprimir_pantalla = True
-
-afn.procesarListaCadenas(lista_cadenas, nombre_archivo, imprimir_pantalla)
-
-# # afn.graficar()
-
-
-# # Automata = AFNLambda("PruebaITC.txt")
-# # Automata.graficar()
+##################################################################################################################################################################

@@ -179,7 +179,7 @@ class AFD_class:
         return archivo.close()
     
     def procesarCadena(self, cadena):
-        estado_actual = self.estadoInicial
+        estado_actual = self.estadoInicial[0]
         
         # Recorrer la cadena y actualizar el estado actual en cada transición
         for simbolo in cadena:
@@ -203,7 +203,7 @@ class AFD_class:
     
     def procesarCadenaConDetalles(self, cadena):
         # Inicializar el estado actual con el estado inicial
-        estado_actual = self.estadoInicial
+        estado_actual = self.estadoInicial[0]
         salida = ''
         i = 0
         

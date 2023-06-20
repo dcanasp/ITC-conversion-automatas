@@ -1,0 +1,2 @@
+-> q0(a)-> q0(a)-> q0(a)-> q0-> Rechazo
+-> q0(a)-> q0(a)-> q0(a)-> q3-> Rechazo
