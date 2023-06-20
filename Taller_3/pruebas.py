@@ -14,5 +14,6 @@ class AFPN:
             print('procesamiento 1: (q0,aba,$)->(q1,ba,A)->(q3,b,AA)>>rejected')
             print('procesamiento 2: (q0,aba,$)->(q2,ba,A)->(q3,ba,A)>>rejected')
             print('procesamiento 3: (q0,aba,$)->(q2,ba,A)->(q2,a,$)->(q3,a,$)>>rejected')
+        return
 
     

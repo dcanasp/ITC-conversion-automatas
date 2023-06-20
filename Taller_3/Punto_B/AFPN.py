@@ -213,11 +213,12 @@ class AFPN:
         while len(cadena) > 0 or self.Pila:
             cadena, procedimiento = self.leerLetraConDetalles(cadena)
             procedimientoFinal += procedimiento + "\n"
-            if cadena == False:
+            aceptado = self.procesarCadena(cadena   )
+            if aceptado == False:
                 procedimientoFinal += "Cadena no aceptada"
                 procedimientoFinal += "\n"
                 return procedimientoFinal
-            elif cadena == "" and len(self.Pila) == 0:
+            elif aceptado == "" and len(self.Pila) == 0:
                 procedimientoFinal += "Cadena aceptada"
                 procedimientoFinal += "\n"
                 return procedimientoFinal
