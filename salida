@@ -1,0 +1,57 @@
+Cadena: aab
+Procesamientos Aceptados:
+
+Procesamientos Rechazados:
+-> q10(a)-> q1(a)-> q1(b)-> q2-> Rechazo
+-> q10(a)-> q1(a)-> q1(b)-> q0-> Rechazo
+
+Procesamientos Abortados:
+-> q10(a)-> q1(a)-> q1-> Abortado
+-> q10(a)-> q1(a)-> q0-> Abortado
+-> q10(a)-> q1-> Abortado
+-> q10(a)-> q2-> Abortado
+-> q10(a)-> q3-> Abortado
+-> q10-> Abortado
+
+Número de posibles procesamientos: 8
+Número de procesamientos de aceptación: 0
+Número de procesamientos de rechazo: 2
+Número de procesamientos abortados: 6
+
+Cadena: abb
+Procesamientos Aceptados:
+-> q10(a)-> q1(b)-> q2(b)-> q3-> Aceptación
+
+Procesamientos Rechazados:
+-> q10(a)-> q1(b)-> q2(b)-> q1-> Rechazo
+-> q10(a)-> q2(b)-> q1(b)-> q2-> Rechazo
+-> q10(a)-> q2(b)-> q1(b)-> q0-> Rechazo
+
+Procesamientos Abortados:
+-> q10(a)-> q1(b)-> q2-> Abortado
+-> q10(a)-> q1(b)-> q0-> Abortado
+-> q10(a)-> q1-> Abortado
+-> q10(a)-> q2(b)-> q3-> Abortado
+-> q10(a)-> q2(b)-> q1-> Abortado
+-> q10(a)-> q2-> Abortado
+-> q10(a)-> q3-> Abortado
+-> q10-> Abortado
+
+Número de posibles procesamientos: 12
+Número de procesamientos de aceptación: 1
+Número de procesamientos de rechazo: 3
+Número de procesamientos abortados: 8
+
+Cadena: baa
+Procesamientos Aceptados:
+
+Procesamientos Rechazados:
+
+Procesamientos Abortados:
+-> q10-> Abortado
+
+Número de posibles procesamientos: 1
+Número de procesamientos de aceptación: 0
+Número de procesamientos de rechazo: 0
+Número de procesamientos abortados: 1
+
