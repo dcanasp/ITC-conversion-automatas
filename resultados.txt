@@ -1,4 +1,0 @@
-cadena: abcc,  no,  (q0)abcc->X(q1)bcc!->XY(q2)cc!->X(q3)YZc!->(q3)XYZc!->X(q0)YZc!->XY(q4)Zc!->XYZ(q4)c!->XYZc! Cadena rechazada por la MT.
-cadena: xyz,  no,  (q0)xyz->xyz! Cadena rechazada por la MT.
-cadena: abc,  yes,  (q0)abc->X(q1)bc!->XY(q2)c!->X(q3)YZ!->(q3)XYZ!->X(q0)YZ!->XY(q4)Z!->XYZ(q4)!->XYZ(q5)! Cadena aceptada por la MT.
-cadena: abc,  yes,  (q0)abc->X(q1)bc!->XY(q2)c!->X(q3)YZ!->(q3)XYZ!->X(q0)YZ!->XY(q4)Z!->XYZ(q4)!->XYZ(q5)! Cadena aceptada por la MT.
