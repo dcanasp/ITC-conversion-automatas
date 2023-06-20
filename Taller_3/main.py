@@ -1,56 +1,59 @@
 from Punto_A.AFPD import AFPD
 from Punto_B.AFPN import AFPN
+from pruebas import AFPN
 from Punto_D.MT import MT
 
-# '''
-# AFPD
-# '''
+'''
+AFPD
+'''
 # Pila=AFPD("AFPD.pda")
-# #print(Pila)
-# #print(Pila.modificarPila(["a","b","c"],"pop","a"))
-# #print(Pila.obtenerTransiciones("q0","a","A"))
-# #print(Pila.leerLetra("bb"))
-# #print(Pila.procesarCadenaConDetalles("abab"))
-# # Definir la lista de cadenas a procesar
-# #listaCadenas = ["abab", "aabb", "abba"]
-# # Llamar al método procesarListaCadenas
-# #Pila.procesarListaCadenas(listaCadenas, "resultados.txt", True)
-
-
-# '''
-# AFPN
-# '''
-# estados = ['q0','q1','q2','q3']
-# estados_aceptacion = ['q0','q3']
-# estado_inicial = 'q0'
-# sigma = ['a','b']
-# Gamma = ['A','B']
-# Delta = {
-#     ('q0','a','$','A'): ['q1','q2'],
-#     ('q1','a','$','A'): ['q0'],
-#     ('q1','b','A','$'): ['q3'],
-#     ('q2','b','A','$'): ['q2'],
-#     ('q2','$','$','$'): ['q3'],
-# }
-# Pila=AFPN(estados,estado_inicial,estados_aceptacion,sigma,Gamma,Delta)
-# print(Pila)
-# print(Pila.procesarCadena('ab'))
-# print(Pila.modificarPila(["a","b","c"],"pop","a"))
+#print(Pila)
+#print(Pila.modificarPila(["a","b","c"],"pop","a"))
 #print(Pila.obtenerTransiciones("q0","a","A"))
 #print(Pila.leerLetra("bb"))
 #print(Pila.procesarCadenaConDetalles("abab"))
 # Definir la lista de cadenas a procesar
 #listaCadenas = ["abab", "aabb", "abba"]
 # Llamar al método procesarListaCadenas
-#Pila.procesarListaCadenas(listaCadenas, "resultados.txt", True)3
+#Pila.procesarListaCadenas(listaCadenas, "resultados.txt", True)
+
+
+'''
+AFPN
+'''
+archivo=AFPN("AFPN.pda")
+estados = ['q0','q1','q2','q3']
+estados_aceptacion = ['q0','q3']
+estado_inicial = 'q0'
+sigma = ['a','b']
+Gamma = ['A','B']
+Delta = {
+    ('q0','a','$','A'): ['q1','q2'],
+    ('q1','a','$','A'): ['q0'],
+    ('q1','b','A','$'): ['q3'],
+    ('q2','b','A','$'): ['q2'],
+    ('q2','$','$','$'): ['q3'],
+}
+afpn=AFPN(estados,estado_inicial,estados_aceptacion,sigma,Gamma,Delta)
+# print(afpn)
+print(afpn.procesarCadena('ab'))
+print(afpn.procesarCadenaConDetalles('aba'))
+# print(afpn.modificarPila(["a","b","c"],"pop","a"))
+#print(afpn.obtenerTransiciones("q0","a","A"))
+#print(afpn.leerLetra("bb"))
+#print(afpn.procesarCadenaConDetalles("abab"))
+# Definir la lista de cadenas a procesar
+#listaCadenas = ["abab", "aabb", "abba"]
+# Llamar al método procesarListaCadenas
+#afpn.procesarListaCadenas(listaCadenas, "resultados.txt", True)3
 
 
 
-# '''
-# # MT
-# '''
+'''
+MT
+'''
 
-# # Definición de la máquina de Turing
+# Definición de la máquina de Turing
 # estados = ['q0', 'q1', 'q2', 'q3', 'q4', 'q5']
 # estadoInicial = 'q0'
 # estadosAceptacion = ['q5']
@@ -103,5 +106,3 @@ from Punto_D.MT import MT
 # mt.procesarCadenaConDetalles(cadena)
 # print("PROCESAR FUNCION")
 # mt.procesarFuncion(cadena)
-# print("procesar lista cadenas")
-# mt.procesarListaCadenas(["aabc","aabbcc","aabbccc","aabbcccc","aabbcccccc","aabbcccccccc"], "resultados.txt", True)
