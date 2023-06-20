@@ -96,13 +96,10 @@ class MT:
         cinta.append('!')  # Agregar un símbolo de espacio en blanco al final de la cinta
         posicion = 0
         estado_actual = self.estadoInicial
-        var=True
-        # Preparar el string para almacenar los detalles
-        detalles = ""
 
-        # Agregar el estado inicial y la cadena original
+        # Imprimir el estado inicial y la cadena original
         detalle = f"({estado_actual}){cadena}"
-        detalles += detalle
+        print(detalle, end='')
 
         while estado_actual not in self.estadosAceptacion:
             # Obtener el símbolo actual en la cinta
@@ -134,29 +131,31 @@ class MT:
 
                 # Obtener la parte izquierda y derecha de la cadena respecto al estado actual
                 izquierda = ''.join(cinta[:posicion])
-                derecha = ''.join(cinta[posicion:])
+                derecha = ''.join(cinta[posicion+1:])
 
-                # Agregar los detalles del procesamiento al string
-                detalle = f"->{izquierda}({estado_actual}){derecha}"
-                detalles += detalle
-
+                # Imprimir los detalles del procesamiento
+                detalle = f"->{izquierda}({estado_actual}){simbolo_actual}{derecha}"
+                print(detalle, end='')
+                
                 # Si hemos llegado al final de la cadena, detener el bucle
                 if posicion == len(cadena_procesada):
+                    
                     break
             else:
-                cadena_procesada = ''.join(cinta)
-                detalles += f"->{cadena_procesada}"
-                detalles += " Cadena rechazada por la MT."
-                var=False 
-                break
+                print("\nCadena rechazada por la MT.")
+                return False
+
+        # Imprimir la cadena procesada final
+        cadena_procesada = ''.join(cinta)
+        print(f"->{cadena_procesada}")
 
         if estado_actual in self.estadosAceptacion:
-            detalles += " Cadena aceptada por la MT."
-
-        # Imprimir los detalles en la consola
-
-        return detalles,var
-
+            print("Cadena aceptada por la MT.")
+            return cadena_procesada
+        else:
+            print("Cadena rechazada por la MT.")
+            return ''
+    
     def exportar(self, nombreArchivo):
         archivo = open(nombreArchivo+".tm","w")
         archivo.write(self.toString())
@@ -202,49 +201,16 @@ class MT:
 
         # Obtener la última configuración instantánea
         izquierda = ''.join(cinta[:posicion])
-        derecha = ''.join(cinta[posicion:])
+        derecha = ''.join(cinta[posicion+1:])
         ultima_configuracion = f"{izquierda}{derecha}"
 
         # Imprimir la última configuración instantánea
         print(ultima_configuracion)
 
         return ultima_configuracion
+
+
     
-    def procesarListaCadenas(self, listaCadenas, nombreArchivo=None, imprimirPantalla=False):
-        if not nombreArchivo:
-            nombreArchivo = "resultados.txt"
-
-        try:
-            archivo = open(nombreArchivo, "w")
-        except IOError:
-            print("No se pudo abrir el archivo de resultados.")
-            return
-
-        resultados = ""  # Variable para almacenar los detalles del procesamiento
-
-        for cadena in listaCadenas:
-            # Invocar el método procesarCadenaConDetalles para obtener los detalles del procesamiento
-            detalle = self.procesarCadenaConDetalles(cadena)
-            ultima = self.procesarFuncion(cadena)
-            # Verificar si la cadena es aceptada o rechazada
-            resultado = "yes" if detalle[1] else "no"
-
-            # Construir la cadena de salida con el formato especificado
-            salida = f"cadena: {cadena},  {resultado},  {detalle[0]}\n"
-
-            # Agregar la salida a los resultados
-            resultados += salida
-
-            # Imprimir la salida si es necesario
-            if imprimirPantalla:
-                salida = f"Cadena: {cadena}, Ultima configuracion instantanea: {ultima}, Aceptada: {resultado}\n"
-                print(salida)
-
-        archivo.write(resultados)  # Guardar los resultados en el archivo
-        archivo.close()
-
-        print(f"Los resultados se han guardado en el archivo '{nombreArchivo}'.")
-
 def construirMT(descripcion):
     lineas = descripcion.split("\n")
     estados = []
@@ -290,7 +256,7 @@ def construirMTDesdeArchivo(nombreArchivo):
     except FileNotFoundError:
         print("No se encontró el archivo")
 
-cadena = 'aabbcc'
+
 # Definición de la máquina de Turing
 estados = ['q0', 'q1', 'q2', 'q3', 'q4', 'q5']
 estadoInicial = 'q0'
@@ -322,8 +288,18 @@ delta = {
 mt = MT(estados, estadoInicial, estadosAceptacion, alfabetoEntrada, alfabetoCinta, delta)
 
 # Procesar una cadena de ejemplo
-print("PRUEBA CONSTRUIR DESDE ARCHIVO")
-mt=construirMTDesdeArchivo("prueba.tm")
+cadena = 'aabc'
+# aceptada = mt.procesarCadenaConDetalles(cadena)
+
+# if aceptada:
+#     print("La cadena es aceptada por la MT.")
+# else:
+#     print("La cadena es rechazada por la MT.")
+
+#(q0)aabbcc->X(q1)abbcc->Xa(q1)abcc->XaY(q2)bcc->XaYb(q2)bc->XaY(q3)cZc
+#(q0)aabbcc->X(q1)abbcc->Xa(q1)bbcc->XaY(q2)bcc->XaYb(q2)cc->XaYb(q3)bZc->…
+
+# print(mt.toString())
 print("EXPORTAR")
 mt.exportar("prueba2")
 print("TOSTRING")
@@ -334,8 +310,3 @@ print("PROCESAR CADENA CON DETALLES")
 mt.procesarCadenaConDetalles(cadena)
 print("PROCESAR FUNCION")
 mt.procesarFuncion(cadena)
-
-listaCadenas = ["abcc", "xyz", "abc", "abc"]
-print("PROCESAR LISTA DE CADENAS")
-# Procesar las cadenas con detalles y guardar los resultados en un archivo
-mt.procesarListaCadenas(listaCadenas, nombreArchivo="resultados.txt", imprimirPantalla=True)
