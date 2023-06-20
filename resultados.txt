@@ -1,6 +1,20 @@
-Cadena: aabc, Ultima configuracion instantanea: XXY!, Aceptada: no
-Cadena: aabbcc, Ultima configuracion instantanea: XXYYZZ, Aceptada: yes
-Cadena: aabbccc, Ultima configuracion instantanea: XXYYZZ!, Aceptada: no
-Cadena: aabbcccc, Ultima configuracion instantanea: XXYYZZc!, Aceptada: no
-Cadena: aabbcccccc, Ultima configuracion instantanea: XXYYZZccc!, Aceptada: no
-Cadena: aabbcccccccc, Ultima configuracion instantanea: XXYYZZccccc!, Aceptada: no
+Cadena: aaabbaaacc
+Procedimiento: 
+(q0,aaabbaaacc,$,$) ->
+(q0,aabbaaacc,$,$) ->
+(q0,abbaaacc,$,$) ->
+(q0,bbaaacc,A,$) ->
+(q1,baaacc,A,$) ->
+
+Cadena no aceptada
+
+Cadena: aaabbaaaccc
+Procedimiento: 
+(q0,aaabbaaaccc,$,$) ->
+(q0,aabbaaaccc,$,$) ->
+(q0,abbaaaccc,$,$) ->
+(q0,bbaaaccc,A,$) ->
+(q1,baaaccc,A,$) ->
+
+Cadena no aceptada
+

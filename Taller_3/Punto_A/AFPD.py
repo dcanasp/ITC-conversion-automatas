@@ -66,17 +66,17 @@ class AFPD:
             #Obtener los estados de aceptacion
             F=partes[2].split(',')
             #Obtener el alfabeto de entrada
-            Sigma=self.obtenerAlfabeto(partes[3])
+            Sigma=partes[3]
             #Obtener el alfabeto de la pila
-            Gamma=self.obtenerAlfabeto(partes[4])
+            Gamma=partes[4]
             #Obtener la funcion de transicion
             Delta=partes[5].split(',')
 
         self.estados = Q
         self.estadoInicial = q0
         self.estadosAceptacion = F
-        self.alfabeto = Sigma
-        self.alfabetoPila = Gamma
+        self.alfabeto = self.obtenerAlfabeto(Sigma)
+        self.alfabetoPila = self.obtenerAlfabeto(Gamma)
         self.Pila=[]
 
         self.Delta = []
@@ -117,8 +117,11 @@ class AFPD:
         representacion += self.estadoInicial + "\n"
         representacion += "Estados de aceptación: "
         representacion += "\n"
-        for estado in self.estadosAceptacion:
-            representacion += estado + ", "
+        if self.estadosAceptacion is type(list):
+            for estado in self.estadosAceptacion:
+                representacion += estado + ", "
+        else:
+            representacion += str(self.estadosAceptacion) + "\n" + "\n"
         representacion = representacion[:len(representacion)-2] + "\n"
         representacion += "Alfabeto de entrada: "
         representacion += "\n"
@@ -297,4 +300,3 @@ class AFPD:
         nuevoAFPD.Delta = nuevoDelta
         
         return nuevoAFPD
-    

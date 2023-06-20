@@ -1,0 +1,4 @@
+Procesamientos Aceptados:
+Estados: ['s3', 's1', 's2'], Cadena: a
+Estados: ['s3', 's0', 's1', 's2'], Cadena: aa
+Estados: ['s0'], Cadena: aaa

@@ -96,7 +96,16 @@ from Punto_G.aleatorios import claseValidacion
 # afn_instancia.graficar()
 
 ##################################################################################################################################################################
-#AFNLAMBDA
-
+# #AFNLAMBDA
+# AFN_Lambda = AFNLambda("PruebaITC.nfe")
+# #AFN_Lambda = AFNLambda("a-c",["s0","s1","s2","s3"],"s0",["s0","s1","s3"],["s0:b>s1","s0:$>s0;s1","s1:a>s0","s1:b>s2;s3","s1:$>s2;s3","s2:a>s2;s3","s2:$>s2","s3:$>s1;s2"])
+# # print(AFN_Lambda.imprimirAFNLSimplificado())
+# # AFN_Lambda.exportar("PruebaITC")
+# # print(AFN_Lambda.procesarCadena("aaaa"))
+# # print(AFN_Lambda.procesarCadenaConDetalles("aaa"))
+# # AFN_Lambda.computarTodosLosProcesamientos("aaa","prueba")
+# listaCadenas = ["ab", "abc", "abcd"]
+# AFN_Lambda.procesarListaCadenas(listaCadenas, "resultados.txt", imprimirPantalla=True)
+# AFN_Lambda.graficar()
 ##################################################################################################################################################################
 
