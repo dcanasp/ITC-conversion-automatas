@@ -1,54 +1,6 @@
-Cadena: ab
-Procesamientos Aceptados:
-
-Procesamientos Rechazados:
--> q0(a)-> q1(b)-> q2-> Rechazo
--> q0(a)-> q3(b)-> q3-> Rechazo
-
-Procesamientos Abortados:
--> q0(a)-> q0-> Abortado
--> q0(a)-> q1-> Abortado
--> q0(a)-> q3-> Abortado
--> q0-> Abortado
-
-Número de posibles procesamientos: 6
-Número de procesamientos de aceptación: 0
-Número de procesamientos de rechazo: 2
-Número de procesamientos abortados: 4
-
-Cadena: abc
-Procesamientos Aceptados:
-
-Procesamientos Rechazados:
-
-Procesamientos Abortados:
--> q0(a)-> q0-> Abortado
--> q0(a)-> q1(b)-> q2-> Abortado
--> q0(a)-> q1-> Abortado
--> q0(a)-> q3(b)-> q3-> Abortado
--> q0(a)-> q3-> Abortado
--> q0-> Abortado
-
-Número de posibles procesamientos: 6
-Número de procesamientos de aceptación: 0
-Número de procesamientos de rechazo: 0
-Número de procesamientos abortados: 6
-
-Cadena: abcd
-Procesamientos Aceptados:
-
-Procesamientos Rechazados:
-
-Procesamientos Abortados:
--> q0(a)-> q0-> Abortado
--> q0(a)-> q1(b)-> q2-> Abortado
--> q0(a)-> q1-> Abortado
--> q0(a)-> q3(b)-> q3-> Abortado
--> q0(a)-> q3-> Abortado
--> q0-> Abortado
-
-Número de posibles procesamientos: 6
-Número de procesamientos de aceptación: 0
-Número de procesamientos de rechazo: 0
-Número de procesamientos abortados: 6
-
+Cadena: aabc, Ultima configuracion instantanea: XXY!, Aceptada: no
+Cadena: aabbcc, Ultima configuracion instantanea: XXYYZZ, Aceptada: yes
+Cadena: aabbccc, Ultima configuracion instantanea: XXYYZZ!, Aceptada: no
+Cadena: aabbcccc, Ultima configuracion instantanea: XXYYZZc!, Aceptada: no
+Cadena: aabbcccccc, Ultima configuracion instantanea: XXYYZZccc!, Aceptada: no
+Cadena: aabbcccccccc, Ultima configuracion instantanea: XXYYZZccccc!, Aceptada: no

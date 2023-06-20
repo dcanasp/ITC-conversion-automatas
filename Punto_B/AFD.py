@@ -179,7 +179,7 @@ class AFD_class:
         return archivo.close()
     
     def procesarCadena(self, cadena):
-        estado_actual = self.estadoInicial[0]
+        estado_actual = self.estadoInicial
         
         # Recorrer la cadena y actualizar el estado actual en cada transición
         for simbolo in cadena:
@@ -203,7 +203,7 @@ class AFD_class:
     
     def procesarCadenaConDetalles(self, cadena):
         # Inicializar el estado actual con el estado inicial
-        estado_actual = self.estadoInicial[0]
+        estado_actual = self.estadoInicial
         salida = ''
         i = 0
         
@@ -230,13 +230,13 @@ class AFD_class:
             return salida + '\tNo Aceptacion'
 
     
-    def procesarListaCadenas(self, listaCadenas,nombreArchivo, imprimirPantalla: bool):
+    def procesarListaCadenas(self, listaCadenas, nombreArchivo, imprimirPantalla: bool):
         output = ''
 
         for cadena in listaCadenas:
             output += cadena+'\t'+self.procesarCadenaConDetalles(cadena)+'\n'
 
-        archivo = open(nombreArchivo+".afd","w")
+        archivo = open(nombreArchivo+".dfa","w")
         archivo.write(output)
         archivo.close()
 

@@ -208,6 +208,41 @@ class MT:
         print(ultima_configuracion)
 
         return ultima_configuracion
+    
+    def procesarListaCadenas(self, listaCadenas, nombreArchivo=None, imprimirPantalla=False):
+        if not nombreArchivo:
+            nombreArchivo = "resultados.txt"
+
+        try:
+            archivo = open(nombreArchivo, "w")
+        except IOError:
+            print("No se pudo abrir el archivo de resultados.")
+            return
+
+        resultados = ""  # Variable para almacenar los detalles del procesamiento
+
+        for cadena in listaCadenas:
+            detalle = self.procesarCadenaConDetalles(cadena)  # Obtener los detalles del procesamiento
+            ultima = self.procesarFuncion(cadena)
+            if detalle:
+                resultado = "yes"
+            else:
+                resultado = "no"
+
+            # Construir la cadena de salida con el formato especificado
+            salida = f"Cadena: {cadena}, Ultima configuracion instantanea: {ultima}, Aceptada: {resultado}\n"
+
+            # Agregar la salida a los resultados
+            resultados += salida
+
+            # Imprimir la salida si es necesario
+            if imprimirPantalla:
+                print(salida)
+
+        archivo.write(resultados)  # Guardar los resultados en el archivo
+        archivo.close()
+
+        print(f"Los resultados se han guardado en el archivo '{nombreArchivo}'.")
 
 
     

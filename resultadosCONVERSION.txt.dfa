@@ -1,0 +1,3 @@
+ab	[q0q1q3,ab]->[q2q3,b]->	No Aceptacion
+abc	[q0q1q3,abc]->[q2q3,bc]->	No Aceptacion
+abcd	[q0q1q3,abcd]->[q2q3,bcd]->	No Aceptacion

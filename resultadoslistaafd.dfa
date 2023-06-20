@@ -1,0 +1,3 @@
+abbbabaaabbaaa	[q1,abbbabaaabbaaa]->[q1,bbbabaaabbaaa]->[q1,bbabaaabbaaa]->[q1,babaaabbaaa]->[q0,abaaabbaaa]->[q0,baaabbaaa]->[q1,aaabbaaa]->[q0,aabbaaa]->[q1,abbaaa]->[q1,bbaaa]->[q1,baaa]->[q0,aaa]->[q1,aa]->[q0,a]->	Aceptacion
+abbbabaaa	[q1,abbbabaaa]->[q1,bbbabaaa]->[q1,bbabaaa]->[q1,babaaa]->[q0,abaaa]->[q0,baaa]->[q1,aaa]->[q0,aa]->[q1,a]->	No Aceptacion
+abbbbaaa	[q1,abbbbaaa]->[q1,bbbbaaa]->[q1,bbbaaa]->[q1,bbaaa]->[q1,baaa]->[q0,aaa]->[q1,aa]->[q0,a]->	Aceptacion
